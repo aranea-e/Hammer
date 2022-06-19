@@ -3,6 +3,8 @@ A fast-paced real-time card game
 
 This game was created by myself and a friend from the scouting program for our Game Design Merit Badge. It took many forms over the short period we worked on it and it quickly became popular within our scout troop. Originally, there were no jokers, the game was 3x3, aces were wild on the table, and you could only hold 10 cards. 
 
+# Gameplay
+
 At the start of the game, each player gets 7 cards and a 3x4 grid of face-up cards is placed on the table. Players can see their own cards, but not other peoples' cards. As cards are removed from the table, they are discarded and replaced.
 
 Gameplay works by matching cards in your hand with those on the table. You want to keep your card count low, but you might get punished if you're too hasty, because other players can play on top of your cards. If another player plays on your card, you draw 3 (a "hit"). However, if you or a third player choose to play a fourth card, "Hammer" is declared. The player who it was played on must try to get the cards first while all other players except the one who triggered it can quickly attempt to throw another card into the pile. If playing with more than 1 deck, then more of the same card can keep reversing the "Hammer". If a pile is not interacted with for a long enough period, then it is removed from the table.

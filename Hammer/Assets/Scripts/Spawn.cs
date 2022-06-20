@@ -9,6 +9,9 @@ public class Spawn : MonoBehaviour
 
     private void Start()
     {
-        PhotonNetwork.Instantiate(prefab.name, Vector2.zero, Quaternion.identity);
+        if (PhotonNetwork.IsMasterClient)
+        {    
+            PhotonNetwork.Instantiate(prefab.name, Vector2.zero, Quaternion.identity);
+        }
     }
 }

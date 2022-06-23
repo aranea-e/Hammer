@@ -152,7 +152,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7d4300282a6abd4da95c654977717fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: 677327187092302109, guid: 268cb6f0d888cb649aaa78ac322d7880, type: 3}
+  deckPrefab: {fileID: 677327187092302109, guid: 268cb6f0d888cb649aaa78ac322d7880, type: 3}
+  cardPrefab: {fileID: 4106118142169498953, guid: d47debb612be45f45a49bba6492d7fb0, type: 3}
+  cardLocations:
+  - {x: -2.25, y: 0.78125}
+  - {x: -0.75, y: 0.78125}
+  - {x: 0.75, y: 0.78125}
+  - {x: 2.25, y: 0.78125}
+  - {x: -2.25, y: -0.78125}
+  - {x: -0.75, y: -0.78125}
+  - {x: 0.75, y: -0.78125}
+  - {x: 2.25, y: -0.78125}
+  - {x: -2.25, y: -2.34375}
+  - {x: -0.75, y: -2.34375}
+  - {x: 0.75, y: -2.34375}
+  - {x: 2.25, y: -2.34375}
 --- !u!4 &392414619
 Transform:
   m_ObjectHideFlags: 0
@@ -161,7 +175,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 392414617}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.675069, y: 1.064871, z: 1.3501006}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

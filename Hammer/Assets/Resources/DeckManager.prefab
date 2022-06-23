@@ -156,6 +156,20 @@ MonoBehaviour:
   - S13
   - J1
   - J2
+  cards: 0
+  cardObjects:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   pv: {fileID: 0}
 --- !u!114 &4685274199829902946
 MonoBehaviour:

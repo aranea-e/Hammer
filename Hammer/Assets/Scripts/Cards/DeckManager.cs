@@ -8,7 +8,12 @@ public class DeckManager : MonoBehaviour
     #region vars
     public string[] deck;
     public string[] deckFull;
+    public int cards;
     private string temp;
+    #endregion
+
+    #region references
+    public Card[] cardObjects;
     public PhotonView pv;
     #endregion
 
@@ -24,7 +29,10 @@ public class DeckManager : MonoBehaviour
     {
         if (Input.GetKeyDown("space") && PhotonNetwork.IsMasterClient)
         {
-            Shuffle(deck);
+            for (int i = 0; i < 12; i++)
+            {
+                cardObjects[i].drawCard();
+            }
             pv.RPC("syncDeck", RpcTarget.All, deck);
 
         }
@@ -51,9 +59,38 @@ public class DeckManager : MonoBehaviour
     }
 
     [PunRPC]
-    void syncDeck(string[] deckToSync)
+    public void syncDeck(string[] deckToSync)
     {
         deck = deckToSync;
+    }
+
+    public string drawCard(string[] deckToDraw)
+    {
+        bool cont = false;
+        temp = "none";
+        for (int i = 0; !cont && i < 54; i++)
+        {
+            if (deckToDraw[i] != "none")
+            {
+                temp = deckToDraw[i];
+                deckToDraw[i] = "none";
+                cont = true;
+            }
+        }
+        return temp;
+    }
+
+    public int countDeck(string[] deckToCount)
+    {
+        cards = 0;
+        for (int i = 0; i < deckToCount.Length; i++)
+        {
+            if (deckToCount[i] != "none")
+            {
+                cards++;
+            }
+        }
+        return cards;
     }
     #endregion
 }

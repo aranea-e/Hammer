@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-public class Card : MonoBehaviour
+public class Card : MonoBehaviourPunCallbacks, IPunObservable
 {
     #region vars
     public string cardCurrent;
@@ -44,7 +44,7 @@ public class Card : MonoBehaviour
     public void drawCard()
     {
         cardCurrent = dm.drawCard(dm.deck);
-        pv.RPC("syncCard", RpcTarget.All, cardCurrent);
+        updateSprite(cardCurrent);
     }
 
     public void updateSprite(string cardToDisplay)
@@ -65,11 +65,17 @@ public class Card : MonoBehaviour
             sr.enabled = true;
         }
     }
-    [PunRPC]
-    public void syncCard(string cardToSync)
-    {
-        cardCurrent = cardToSync;
-        updateSprite(cardCurrent);
-    }
     #endregion
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            stream.SendNext(cardCurrent);
+        } else
+        {
+            cardCurrent = (string)stream.ReceiveNext();
+            updateSprite(cardCurrent);
+        }
+    }
 }

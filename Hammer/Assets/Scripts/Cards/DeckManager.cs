@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-public class DeckManager : MonoBehaviour
+public class DeckManager : MonoBehaviourPunCallbacks, IPunObservable
 {
     #region vars
     public string[] deck;
@@ -22,19 +22,25 @@ public class DeckManager : MonoBehaviour
         pv = GetComponent<PhotonView>();
         ResetDeck(deck);
         Shuffle(deck);
-        pv.RPC("syncDeck", RpcTarget.All, deck);
     }
 
     void Update()
     {
-        if (Input.GetKeyDown("space") && PhotonNetwork.IsMasterClient)
+        if (Input.GetKeyDown("space"))
         {
-            for (int i = 0; i < 12; i++)
+            if (PhotonNetwork.IsMasterClient)
             {
-                cardObjects[i].drawCard();
+                for (int i = 0; i < 12; i++)
+                {
+                    cardObjects[i].drawCard();
+                }
+            } else
+            {
+                for (int i = 0; i < 12; i++)
+                {
+                    cardObjects[i].updateSprite(cardObjects[i].cardCurrent);
+                }
             }
-            pv.RPC("syncDeck", RpcTarget.All, deck);
-
         }
     }
 
@@ -56,12 +62,6 @@ public class DeckManager : MonoBehaviour
         {
             deckToReset[i] = deckFull[i]; //copies values from deckFull, a full sorted deck
         }
-    }
-
-    [PunRPC]
-    public void syncDeck(string[] deckToSync)
-    {
-        deck = deckToSync;
     }
 
     public string drawCard(string[] deckToDraw)
@@ -93,4 +93,21 @@ public class DeckManager : MonoBehaviour
         return cards;
     }
     #endregion
+
+        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            for (int i = 0; i < 54; i++)
+            {
+                stream.SendNext(deck[i]);
+            }
+        } else
+        {
+            for (int i = 0; i < 54; i++)
+            {
+                deck[i] = (string)stream.ReceiveNext();
+            }
+        }
+    }
 }

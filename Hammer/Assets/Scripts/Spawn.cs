@@ -17,9 +17,9 @@ public class Spawn : MonoBehaviour
             {
                 PhotonNetwork.Instantiate(cardPrefab.name, cardLocations[i], Quaternion.identity);
                 /*
-                Instantiates 12 cards, with locations found in cardLocations
-                Locations will be used to determine which card is which
-                Cards will add themselves to cardObjects in DeckManager
+                instantiates 12 cards, with locations found in cardLocations
+                locations will be used to determine which card is which
+                cards will add themselves to cardObjects in DeckManager
                 */
             }
         }

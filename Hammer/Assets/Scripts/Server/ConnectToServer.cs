@@ -6,18 +6,18 @@ using UnityEngine.SceneManagement;
 
 public class ConnectToServer : MonoBehaviourPunCallbacks
 {
-    void Start()
+    void Start() //automatic process with no user input
     {
-        PhotonNetwork.ConnectUsingSettings();
+        PhotonNetwork.ConnectUsingSettings(); //connects to servers, allowing user to later join a room
     }
 
-    public override void OnConnectedToMaster()
+    public override void OnConnectedToMaster() //activates when connected to server
     {
-        PhotonNetwork.JoinLobby();
+        PhotonNetwork.JoinLobby(); //joins the lobby, allowing users to now join rooms
     }
 
-    public override void OnJoinedLobby()
+    public override void OnJoinedLobby() //activates when user joins the lobby
     {
-        SceneManager.LoadScene("Lobby");
+        SceneManager.LoadScene("Lobby"); //loads lobby scene with room selection
     }
 }

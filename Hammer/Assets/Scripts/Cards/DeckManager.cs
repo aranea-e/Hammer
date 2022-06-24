@@ -38,10 +38,10 @@ public class DeckManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         for (int i = 0; i < 54; i++) 
         {
-            int rnd = Random.Range(i, deck.Length);
+            int rnd = Random.Range(i, deck.Length); //chooses random card from deck
             temp = deck[rnd]; //temporary variable temp stores values during change
-            deck[rnd] = deck[i];
-            deck[i] = temp;
+            deck[rnd] = deck[i]; //swaps random card with current card
+            deck[i] = temp; //sets current card to temp value
         }
     }
 
@@ -52,6 +52,7 @@ public class DeckManager : MonoBehaviourPunCallbacks, IPunObservable
         {
             deck[i] = deckFull[i]; //copies values from deckFull, a full sorted deck
         }
+        updateDeckSprite(); //updates the deck to reflect change
     }
 
     public string drawCard()
@@ -60,6 +61,10 @@ public class DeckManager : MonoBehaviourPunCallbacks, IPunObservable
         temp = "none";
         for (int i = 0; !cont && i < 54; i++)
         {
+            /*
+            finds the topmost card != none
+            if all cards == none, returns none
+            */
             if (deck[i] != "none")
             {
                 temp = deck[i];
@@ -67,7 +72,7 @@ public class DeckManager : MonoBehaviourPunCallbacks, IPunObservable
                 cont = true;
             }
         }
-        updateDeckSprite();
+        updateDeckSprite(); //update deck to reflect drawn card
         return temp;
     }
 
@@ -76,6 +81,7 @@ public class DeckManager : MonoBehaviourPunCallbacks, IPunObservable
         cards = 0;
         for (int i = 0; i < deck.Length; i++)
         {
+            //checks the number of cards in the deck != none
             if (deck[i] != "none")
             {
                 cards++;
@@ -86,33 +92,34 @@ public class DeckManager : MonoBehaviourPunCallbacks, IPunObservable
 
     public void updateDeckSprite()
     {
-        textmesh.text = countDeck().ToString();
-        sr.enabled = countDeck() != 0;
+        textmesh.text = countDeck().ToString(); //counts deck and updates number accordingly
+        sr.enabled = countDeck() != 0; //if there are no cards in the deck, hides blank card sprite
     }
 
     [ContextMenu("fill table")]
-    public void drawTable()
+    public void drawTable() //draws a full table of cards
     {
         for (int i = 0; i < 12; i++)
         {
-            cardObjects[i].drawCard();
+            cardObjects[i].drawCard(); //calls drawCard() from each table card object
         }
     }
     #endregion
 
-        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-        if (stream.IsWriting)
+        if (stream.IsWriting) //if client is owner of deck, sends deck data
         {
             for (int i = 0; i < 54; i++)
             {
                 stream.SendNext(deck[i]);
             }
-        } else
+        } else //if client is not owner of deck, looks for deck data and updates the deck sprite and number
         {
             for (int i = 0; i < 54; i++)
             {
                 deck[i] = (string)stream.ReceiveNext();
+                updateDeckSprite();
             }
         }
     }

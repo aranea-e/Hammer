@@ -43,7 +43,7 @@ public class Card : MonoBehaviourPunCallbacks, IPunObservable
     #region functions
     public void drawCard()
     {
-        cardCurrent = dm.drawCard(dm.deck);
+        cardCurrent = dm.drawCard();
         updateSprite(cardCurrent);
     }
 

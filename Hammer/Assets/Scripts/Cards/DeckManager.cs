@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 using Photon.Pun;
 
 public class DeckManager : MonoBehaviourPunCallbacks, IPunObservable
@@ -15,82 +16,87 @@ public class DeckManager : MonoBehaviourPunCallbacks, IPunObservable
     #region references
     public Card[] cardObjects;
     public PhotonView pv;
+    public SpriteRenderer sr;
+    public TextMeshProUGUI textmesh;
     #endregion
 
     void Start()
     {
         pv = GetComponent<PhotonView>();
-        ResetDeck(deck);
-        Shuffle(deck);
+        ResetDeck();
+        Shuffle();
     }
 
     void Update()
     {
-        if (Input.GetKeyDown("space"))
-        {
-            if (PhotonNetwork.IsMasterClient)
-            {
-                for (int i = 0; i < 12; i++)
-                {
-                    cardObjects[i].drawCard();
-                }
-            } else
-            {
-                for (int i = 0; i < 12; i++)
-                {
-                    cardObjects[i].updateSprite(cardObjects[i].cardCurrent);
-                }
-            }
-        }
+
     }
 
     #region functions
-    public void Shuffle(string[] deckToShuffle) //randomizes order of cards in deckToShuffle
+    [ContextMenu("shuffle")]
+    public void Shuffle() //randomizes order of cards in deck
     {
         for (int i = 0; i < 54; i++) 
         {
-            int rnd = Random.Range(i, deckToShuffle.Length);
-            temp = deckToShuffle[rnd]; //temporary variable temp stores values during change
-            deckToShuffle[rnd] = deckToShuffle[i];
-            deckToShuffle[i] = temp;
+            int rnd = Random.Range(i, deck.Length);
+            temp = deck[rnd]; //temporary variable temp stores values during change
+            deck[rnd] = deck[i];
+            deck[i] = temp;
         }
     }
 
-    public void ResetDeck(string[] deckToReset) //resets the deck back to default
+    [ContextMenu("reset")]
+    public void ResetDeck() //resets the deck back to default
     {
         for (int i = 0; i < 54; i++)
         {
-            deckToReset[i] = deckFull[i]; //copies values from deckFull, a full sorted deck
+            deck[i] = deckFull[i]; //copies values from deckFull, a full sorted deck
         }
     }
 
-    public string drawCard(string[] deckToDraw)
+    public string drawCard()
     {
         bool cont = false;
         temp = "none";
         for (int i = 0; !cont && i < 54; i++)
         {
-            if (deckToDraw[i] != "none")
+            if (deck[i] != "none")
             {
-                temp = deckToDraw[i];
-                deckToDraw[i] = "none";
+                temp = deck[i];
+                deck[i] = "none";
                 cont = true;
             }
         }
+        updateDeckSprite();
         return temp;
     }
 
-    public int countDeck(string[] deckToCount)
+    public int countDeck()
     {
         cards = 0;
-        for (int i = 0; i < deckToCount.Length; i++)
+        for (int i = 0; i < deck.Length; i++)
         {
-            if (deckToCount[i] != "none")
+            if (deck[i] != "none")
             {
                 cards++;
             }
         }
         return cards;
+    }
+
+    public void updateDeckSprite()
+    {
+        textmesh.text = countDeck().ToString();
+        sr.enabled = countDeck() != 0;
+    }
+
+    [ContextMenu("fill table")]
+    public void drawTable()
+    {
+        for (int i = 0; i < 12; i++)
+        {
+            cardObjects[i].drawCard();
+        }
     }
     #endregion
 

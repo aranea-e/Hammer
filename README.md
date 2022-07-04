@@ -1,7 +1,7 @@
 # Hammer
 A fast-paced real-time card game
 
-This game was created by myself and a friend from the scouting program for our Game Design Merit Badge. It took many forms over the short period we worked on it and it quickly became popular within our scout troop. Originally, there were no jokers, the game was 3x3, aces were wild on the table, and you could only hold 10 cards. 
+This game was created by myself and a friend from the scouting program for our Game Design Merit Badge. It took many forms over the short period we worked on it and it quickly became popular within our scout troop. Originally, there were no jokers, the game was 3x3, aces were wild on the table, and you could only hold 10 cards. During development, the 20 max hand size was added so I didn't need to zoom out and render more cards or anything like that.
 
 # Gameplay
 
@@ -13,4 +13,4 @@ Jokers and Aces are both played as wilds, but cannot be played on top of other p
 
 If a player runs out of cards, the game is paused for a moment and all other players draw 3 (a "quake"). The player who ran out also draws 3, but draws an additional card for each time they've triggered a "quake" that game.
 
-If the deck ever runs out of cards, the game is paused and all discards are shuffled. All players' cards are counted, and if a player has above 15 cards, they are eliminated.
+If the deck ever runs out of cards, the game is paused and all discards are shuffled. All players' cards are counted, and if a player has above 15 cards, they are eliminated. If a player ever would need to draw a 22nd card, they are eliminated immediatly.

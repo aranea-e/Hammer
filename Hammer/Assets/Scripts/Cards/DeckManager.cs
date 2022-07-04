@@ -14,7 +14,7 @@ public class DeckManager : MonoBehaviourPunCallbacks, IPunObservable
     #endregion
 
     #region references
-    public Card[] cardObjects;
+    public TableCard[] cardObjects;
     public PhotonView pv;
     public SpriteRenderer sr;
     public TextMeshProUGUI textmesh;

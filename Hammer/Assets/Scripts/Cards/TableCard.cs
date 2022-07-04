@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-public class Card : MonoBehaviourPunCallbacks, IPunObservable
+public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
 {
     #region vars
     public string cardCurrent;

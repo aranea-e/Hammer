@@ -483,7 +483,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 172707450}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.6666667, y: 0, z: -0.001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -504,8 +504,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c7d41e4230e6a043b26b4c0d5de67e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sprites: []
+  sprite: {fileID: 0}
+  cardCurrent: none
   hm: {fileID: 1973103731}
-  sprite: {fileID: 171878876}
+  sr: {fileID: 171878876}
   trans: {fileID: 172707451}
 --- !u!1 &173240056
 GameObject:
@@ -552,8 +555,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c7d41e4230e6a043b26b4c0d5de67e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sprites: []
+  sprite: {fileID: 0}
+  cardCurrent: none
   hm: {fileID: 1973103731}
-  sprite: {fileID: 1452121430}
+  sr: {fileID: 1452121430}
   trans: {fileID: 173240057}
 --- !u!1 &173726486
 GameObject:
@@ -600,8 +606,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c7d41e4230e6a043b26b4c0d5de67e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sprites: []
+  sprite: {fileID: 0}
+  cardCurrent: none
   hm: {fileID: 1973103731}
-  sprite: {fileID: 405098904}
+  sr: {fileID: 405098904}
   trans: {fileID: 173726487}
 --- !u!1 &189314703
 GameObject:
@@ -732,8 +741,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c7d41e4230e6a043b26b4c0d5de67e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sprites: []
+  sprite: {fileID: 0}
+  cardCurrent: none
   hm: {fileID: 1973103731}
-  sprite: {fileID: 2118584777}
+  sr: {fileID: 2118584777}
   trans: {fileID: 349496727}
 --- !u!1 &392414617
 GameObject:
@@ -1007,9 +1019,96 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c7d41e4230e6a043b26b4c0d5de67e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sprites: []
+  sprite: {fileID: 0}
+  cardCurrent: none
   hm: {fileID: 1973103731}
-  sprite: {fileID: 1071386378}
+  sr: {fileID: 1071386378}
   trans: {fileID: 440165299}
+--- !u!1 &448649115
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 448649117}
+  - component: {fileID: 448649116}
+  m_Layer: 0
+  m_Name: CardGlow
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!212 &448649116
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 448649115}
+  m_Enabled: 0
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_Sprite: {fileID: 21300000, guid: acb7421dab994334ea8fa871dffe7ed7, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 1.1875, y: 1.6875}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
+--- !u!4 &448649117
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 448649115}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1973103730}
+  m_RootOrder: 21
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -1139,8 +1238,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c7d41e4230e6a043b26b4c0d5de67e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sprites: []
+  sprite: {fileID: 0}
+  cardCurrent: none
   hm: {fileID: 1973103731}
-  sprite: {fileID: 1091167232}
+  sr: {fileID: 1091167232}
   trans: {fileID: 644448772}
 --- !u!1 &659771982
 GameObject:
@@ -1271,8 +1373,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c7d41e4230e6a043b26b4c0d5de67e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sprites: []
+  sprite: {fileID: 0}
+  cardCurrent: none
   hm: {fileID: 1973103731}
-  sprite: {fileID: 1437639798}
+  sr: {fileID: 1437639798}
   trans: {fileID: 753433732}
 --- !u!1 &877590812
 GameObject:
@@ -1319,8 +1424,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c7d41e4230e6a043b26b4c0d5de67e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sprites: []
+  sprite: {fileID: 0}
+  cardCurrent: none
   hm: {fileID: 1973103731}
-  sprite: {fileID: 126174257}
+  sr: {fileID: 126174257}
   trans: {fileID: 877590813}
 --- !u!1 &925867230
 GameObject:
@@ -1451,8 +1559,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c7d41e4230e6a043b26b4c0d5de67e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sprites: []
+  sprite: {fileID: 0}
+  cardCurrent: none
   hm: {fileID: 1973103731}
-  sprite: {fileID: 189314705}
+  sr: {fileID: 189314705}
   trans: {fileID: 938624768}
 --- !u!1 &1016869677
 GameObject:
@@ -1751,8 +1862,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c7d41e4230e6a043b26b4c0d5de67e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sprites: []
+  sprite: {fileID: 0}
+  cardCurrent: none
   hm: {fileID: 1973103731}
-  sprite: {fileID: 1233955196}
+  sr: {fileID: 1233955196}
   trans: {fileID: 1103783137}
 --- !u!1 &1233955194
 GameObject:
@@ -1967,8 +2081,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c7d41e4230e6a043b26b4c0d5de67e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sprites: []
+  sprite: {fileID: 0}
+  cardCurrent: none
   hm: {fileID: 1973103731}
-  sprite: {fileID: 1610307224}
+  sr: {fileID: 1610307224}
   trans: {fileID: 1322174272}
 --- !u!1 &1346213758
 GameObject:
@@ -2015,8 +2132,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c7d41e4230e6a043b26b4c0d5de67e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sprites: []
+  sprite: {fileID: 0}
+  cardCurrent: none
   hm: {fileID: 1973103731}
-  sprite: {fileID: 88898390}
+  sr: {fileID: 88898390}
   trans: {fileID: 1346213759}
 --- !u!1 &1433871369
 GameObject:
@@ -2315,8 +2435,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c7d41e4230e6a043b26b4c0d5de67e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sprites: []
+  sprite: {fileID: 0}
+  cardCurrent: none
   hm: {fileID: 1973103731}
-  sprite: {fileID: 1257898667}
+  sr: {fileID: 1257898667}
   trans: {fileID: 1480755639}
 --- !u!1 &1539926884
 GameObject:
@@ -2531,8 +2654,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c7d41e4230e6a043b26b4c0d5de67e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sprites: []
+  sprite: {fileID: 0}
+  cardCurrent: none
   hm: {fileID: 1973103731}
-  sprite: {fileID: 75611413}
+  sr: {fileID: 75611413}
   trans: {fileID: 1643946209}
 --- !u!1 &1679215009
 GameObject:
@@ -2579,8 +2705,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c7d41e4230e6a043b26b4c0d5de67e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sprites: []
+  sprite: {fileID: 0}
+  cardCurrent: none
   hm: {fileID: 1973103731}
-  sprite: {fileID: 659771984}
+  sr: {fileID: 659771984}
   trans: {fileID: 1679215010}
 --- !u!1 &1696989275
 GameObject:
@@ -2627,8 +2756,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c7d41e4230e6a043b26b4c0d5de67e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sprites: []
+  sprite: {fileID: 0}
+  cardCurrent: none
   hm: {fileID: 1973103731}
-  sprite: {fileID: 925867232}
+  sr: {fileID: 925867232}
   trans: {fileID: 1696989276}
 --- !u!1 &1795352513
 GameObject:
@@ -2759,8 +2891,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c7d41e4230e6a043b26b4c0d5de67e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sprites: []
+  sprite: {fileID: 0}
+  cardCurrent: none
   hm: {fileID: 1973103731}
-  sprite: {fileID: 1433871371}
+  sr: {fileID: 1433871371}
   trans: {fileID: 1832449704}
 --- !u!1 &1888300019
 GameObject:
@@ -2891,8 +3026,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c7d41e4230e6a043b26b4c0d5de67e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sprites: []
+  sprite: {fileID: 0}
+  cardCurrent: none
   hm: {fileID: 1973103731}
-  sprite: {fileID: 1016869679}
+  sr: {fileID: 1016869679}
   trans: {fileID: 1893667378}
 --- !u!1 &1911436148
 GameObject:
@@ -2939,8 +3077,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c7d41e4230e6a043b26b4c0d5de67e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sprites: []
+  sprite: {fileID: 0}
+  cardCurrent: none
   hm: {fileID: 1973103731}
-  sprite: {fileID: 1539926886}
+  sr: {fileID: 1539926886}
   trans: {fileID: 1911436149}
 --- !u!1 &1953656482
 GameObject:
@@ -2987,8 +3128,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c7d41e4230e6a043b26b4c0d5de67e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sprites: []
+  sprite: {fileID: 0}
+  cardCurrent: none
   hm: {fileID: 1973103731}
-  sprite: {fileID: 1888300021}
+  sr: {fileID: 1888300021}
   trans: {fileID: 1953656483}
 --- !u!1 &1973103729
 GameObject:
@@ -3000,7 +3144,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1973103730}
   - component: {fileID: 1973103731}
-  - component: {fileID: 1973103732}
   m_Layer: 0
   m_Name: HandManager
   m_TagString: Untagged
@@ -3041,6 +3184,7 @@ Transform:
   - {fileID: 1953656483}
   - {fileID: 2045606137}
   - {fileID: 1643946209}
+  - {fileID: 448649117}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3056,7 +3200,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11d04ca5b86d8c74494e407edf724e3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cards:
+  speed: 10
+  targetUp: {x: 0, y: -3.75, z: 0}
+  targetDown: {x: 0, y: -4.5, z: 0}
+  cardHover: {fileID: 0}
+  cardSelected: 0
+  cardObjects:
   - {fileID: 753433733}
   - {fileID: 172707452}
   - {fileID: 440165300}
@@ -3078,31 +3227,31 @@ MonoBehaviour:
   - {fileID: 1953656484}
   - {fileID: 2045606138}
   - {fileID: 1643946210}
-  speed: 10
-  targetUp: {x: 0, y: -3.75, z: 0}
-  targetDown: {x: 0, y: -4.5, z: 0}
---- !u!114 &1973103732
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1973103729}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents: []
-  sceneViewId: 1
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
+  cards:
+  - none
+  - none
+  - none
+  - none
+  - none
+  - none
+  - none
+  - none
+  - none
+  - none
+  - none
+  - none
+  - none
+  - none
+  - none
+  - none
+  - none
+  - none
+  - none
+  - none
+  - none
+  dm: {fileID: 0}
+  cardGlowSR: {fileID: 448649116}
+  cardGlowTR: {fileID: 448649117}
 --- !u!1 &2045606136
 GameObject:
   m_ObjectHideFlags: 0
@@ -3148,8 +3297,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c7d41e4230e6a043b26b4c0d5de67e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sprites: []
+  sprite: {fileID: 0}
+  cardCurrent: none
   hm: {fileID: 1973103731}
-  sprite: {fileID: 416599107}
+  sr: {fileID: 416599107}
   trans: {fileID: 2045606137}
 --- !u!1 &2118584775
 GameObject:

@@ -506,6 +506,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hm: {fileID: 1973103731}
   sprite: {fileID: 171878876}
+  trans: {fileID: 172707451}
 --- !u!1 &173240056
 GameObject:
   m_ObjectHideFlags: 0
@@ -553,6 +554,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hm: {fileID: 1973103731}
   sprite: {fileID: 1452121430}
+  trans: {fileID: 173240057}
 --- !u!1 &173726486
 GameObject:
   m_ObjectHideFlags: 0
@@ -600,6 +602,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hm: {fileID: 1973103731}
   sprite: {fileID: 405098904}
+  trans: {fileID: 173726487}
 --- !u!1 &189314703
 GameObject:
   m_ObjectHideFlags: 0
@@ -731,6 +734,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hm: {fileID: 1973103731}
   sprite: {fileID: 2118584777}
+  trans: {fileID: 349496727}
 --- !u!1 &392414617
 GameObject:
   m_ObjectHideFlags: 0
@@ -1005,6 +1009,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hm: {fileID: 1973103731}
   sprite: {fileID: 1071386378}
+  trans: {fileID: 440165299}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -1136,6 +1141,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hm: {fileID: 1973103731}
   sprite: {fileID: 1091167232}
+  trans: {fileID: 644448772}
 --- !u!1 &659771982
 GameObject:
   m_ObjectHideFlags: 0
@@ -1267,6 +1273,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hm: {fileID: 1973103731}
   sprite: {fileID: 1437639798}
+  trans: {fileID: 753433732}
 --- !u!1 &877590812
 GameObject:
   m_ObjectHideFlags: 0
@@ -1314,6 +1321,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hm: {fileID: 1973103731}
   sprite: {fileID: 126174257}
+  trans: {fileID: 877590813}
 --- !u!1 &925867230
 GameObject:
   m_ObjectHideFlags: 0
@@ -1445,6 +1453,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hm: {fileID: 1973103731}
   sprite: {fileID: 189314705}
+  trans: {fileID: 938624768}
 --- !u!1 &1016869677
 GameObject:
   m_ObjectHideFlags: 0
@@ -1744,6 +1753,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hm: {fileID: 1973103731}
   sprite: {fileID: 1233955196}
+  trans: {fileID: 1103783137}
 --- !u!1 &1233955194
 GameObject:
   m_ObjectHideFlags: 0
@@ -1959,6 +1969,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hm: {fileID: 1973103731}
   sprite: {fileID: 1610307224}
+  trans: {fileID: 1322174272}
 --- !u!1 &1346213758
 GameObject:
   m_ObjectHideFlags: 0
@@ -2006,6 +2017,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hm: {fileID: 1973103731}
   sprite: {fileID: 88898390}
+  trans: {fileID: 1346213759}
 --- !u!1 &1433871369
 GameObject:
   m_ObjectHideFlags: 0
@@ -2305,6 +2317,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hm: {fileID: 1973103731}
   sprite: {fileID: 1257898667}
+  trans: {fileID: 1480755639}
 --- !u!1 &1539926884
 GameObject:
   m_ObjectHideFlags: 0
@@ -2520,6 +2533,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hm: {fileID: 1973103731}
   sprite: {fileID: 75611413}
+  trans: {fileID: 1643946209}
 --- !u!1 &1679215009
 GameObject:
   m_ObjectHideFlags: 0
@@ -2567,6 +2581,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hm: {fileID: 1973103731}
   sprite: {fileID: 659771984}
+  trans: {fileID: 1679215010}
 --- !u!1 &1696989275
 GameObject:
   m_ObjectHideFlags: 0
@@ -2614,6 +2629,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hm: {fileID: 1973103731}
   sprite: {fileID: 925867232}
+  trans: {fileID: 1696989276}
 --- !u!1 &1795352513
 GameObject:
   m_ObjectHideFlags: 0
@@ -2745,6 +2761,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hm: {fileID: 1973103731}
   sprite: {fileID: 1433871371}
+  trans: {fileID: 1832449704}
 --- !u!1 &1888300019
 GameObject:
   m_ObjectHideFlags: 0
@@ -2876,6 +2893,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hm: {fileID: 1973103731}
   sprite: {fileID: 1016869679}
+  trans: {fileID: 1893667378}
 --- !u!1 &1911436148
 GameObject:
   m_ObjectHideFlags: 0
@@ -2923,6 +2941,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hm: {fileID: 1973103731}
   sprite: {fileID: 1539926886}
+  trans: {fileID: 1911436149}
 --- !u!1 &1953656482
 GameObject:
   m_ObjectHideFlags: 0
@@ -2970,6 +2989,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hm: {fileID: 1973103731}
   sprite: {fileID: 1888300021}
+  trans: {fileID: 1953656483}
 --- !u!1 &1973103729
 GameObject:
   m_ObjectHideFlags: 0
@@ -3058,6 +3078,9 @@ MonoBehaviour:
   - {fileID: 1953656484}
   - {fileID: 2045606138}
   - {fileID: 1643946210}
+  speed: 10
+  targetUp: {x: 0, y: -3.75, z: 0}
+  targetDown: {x: 0, y: -4.5, z: 0}
 --- !u!114 &1973103732
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3127,6 +3150,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hm: {fileID: 1973103731}
   sprite: {fileID: 416599107}
+  trans: {fileID: 2045606137}
 --- !u!1 &2118584775
 GameObject:
   m_ObjectHideFlags: 0

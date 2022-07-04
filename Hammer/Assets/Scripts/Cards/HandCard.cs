@@ -6,4 +6,5 @@ public class HandCard : MonoBehaviour
 {
     public HandManager hm;
     public SpriteRenderer sprite;
+    public Transform trans;
 }

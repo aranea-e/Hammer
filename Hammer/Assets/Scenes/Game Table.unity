@@ -778,6 +778,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   deckPrefab: {fileID: 677327187092302109, guid: 268cb6f0d888cb649aaa78ac322d7880, type: 3}
   cardPrefab: {fileID: 4106118142169498953, guid: d47debb612be45f45a49bba6492d7fb0, type: 3}
+  userPrefab: {fileID: 8716282444465609998, guid: 34e8978002b4ec249963c4692e37485f, type: 3}
   cardLocations:
   - {x: -2.25, y: 0.78125}
   - {x: -0.75, y: 0.78125}

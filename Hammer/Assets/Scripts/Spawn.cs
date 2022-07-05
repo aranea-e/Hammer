@@ -7,8 +7,9 @@ public class Spawn : MonoBehaviour
 {
     public GameObject deckPrefab;
     public GameObject cardPrefab;
+    public GameObject userPrefab;
     public Vector2[] cardLocations;
-    void Start()
+    void Awake() //uses Awake to make sure references get assigned properly in Start functions
     {
         if (PhotonNetwork.IsMasterClient)
         {    
@@ -23,5 +24,6 @@ public class Spawn : MonoBehaviour
                 */
             }
         }
+        PhotonNetwork.Instantiate(userPrefab.name, Vector2.zero, Quaternion.identity); //creates the user data manager
     }
 }

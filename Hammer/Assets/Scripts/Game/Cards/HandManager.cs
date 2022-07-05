@@ -9,6 +9,7 @@ public class HandManager : MonoBehaviour
     public Vector3 targetDown;
     public HandCard cardHover;
     public bool cardSelected;
+    public int cardCount;
 
     public HandCard[] cardObjects;
     public string[] cards;
@@ -26,6 +27,7 @@ public class HandManager : MonoBehaviour
         if (cardSelected == false) // detects if a card has already been selected
         {
             cardGlowSR.enabled = false; //hides the glow around selected cards
+            cardHover = null;
             for (int i = 0; i < 21; i++)
             {
             if (Camera.main.ScreenToWorldPoint(Input.mousePosition).x <= cardObjects[i].trans.position.x + 1.0f/6.0f && Camera.main.ScreenToWorldPoint(Input.mousePosition).x >= cardObjects[i].trans.position.x - .5 && Camera.main.ScreenToWorldPoint(Input.mousePosition).y <= -3)
@@ -70,7 +72,7 @@ public class HandManager : MonoBehaviour
         }
         
 
-        if (Input.GetKeyDown(KeyCode.Mouse0) && cardHover.cardCurrent != "none")
+        if (Input.GetKeyDown(KeyCode.Mouse0) && cardHover != null && cardHover.cardCurrent != "none")
         {
 
             cardSelected = !cardSelected;
@@ -78,6 +80,7 @@ public class HandManager : MonoBehaviour
         }
         if (Input.GetKeyDown("space"))
         {
+            dm = Object.FindObjectOfType<DeckManager>();
             bool cont = false;
             for (int i = 0; i < 21 && !cont; i++)
             {
@@ -88,5 +91,18 @@ public class HandManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    public int countHand()
+    {
+        cardCount = 0;
+        for (int i = 0; i < 21; i++)
+        {
+            if (cards[i] != "none")
+            {
+                cardCount++;
+            }
+        }
+        return cardCount;
     }
 }

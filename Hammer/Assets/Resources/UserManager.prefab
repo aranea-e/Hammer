@@ -496,11 +496,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 186c3fd3c60775441ba6cfe9e1542f04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerActorNumber: 0
+  selfPlayerNumber: 0
   playerNumber: 0
   symbolNumber: 0
   username: 
   cards: 0
   pos: {x: 0, y: 0}
+  posList:
+  - {x: -300, y: 150}
+  - {x: 300, y: 150}
+  - {x: -300, y: 75}
+  - {x: -300, y: 75}
+  - {x: -300, y: 0}
+  - {x: 300, y: 0}
+  - {x: -300, y: -75}
+  - {x: 300, y: -75}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
   sprites: []
   sprite: {fileID: 0}
   playerNumberList: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000

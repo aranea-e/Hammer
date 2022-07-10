@@ -8,11 +8,14 @@ using Photon.Pun;
 public class UserManager : MonoBehaviourPunCallbacks, IPunObservable
 {
     #region vars
+    public int playerActorNumber;
+    public int selfPlayerNumber;
     public int playerNumber;
     public int symbolNumber;
     public string username;
     public int cards;
     public Vector2 pos;
+    public Vector2[] posList;
     public Sprite[] sprites;
     public Sprite sprite;
     public Photon.Realtime.Player[] playerList;
@@ -35,6 +38,7 @@ public class UserManager : MonoBehaviourPunCallbacks, IPunObservable
         if (pv.IsMine)
         {
             username = PlayerPrefs.GetString("Username");
+            playerActorNumber = PhotonNetwork.LocalPlayer.ActorNumber;
         }
         hm = Object.FindObjectOfType<HandManager>();
         sprites = Resources.LoadAll<Sprite>("Sprites/PlayerMarkers");
@@ -58,9 +62,13 @@ public class UserManager : MonoBehaviourPunCallbacks, IPunObservable
             {
                 playerNumberList[i] = playerList[i].ActorNumber;
             }
-            if (playerNumberList[i] == PhotonNetwork.LocalPlayer.ActorNumber)
+            if (playerNumberList[i] == playerActorNumber)
             {
                 playerNumber = i;
+            }
+            if (playerNumberList[i] == PhotonNetwork.LocalPlayer.ActorNumber)
+            {
+                selfPlayerNumber = i;
             }
         }
         symbolNumber = playerNumber;
@@ -71,6 +79,13 @@ public class UserManager : MonoBehaviourPunCallbacks, IPunObservable
         } else
         {
             canvas.enabled = true;
+            if (playerNumber > selfPlayerNumber)
+            {
+                pos = posList[playerNumber - 1];
+            } else
+            {
+                pos = posList[playerNumber];
+            }
             rt.anchoredPosition = pos;
             usernameUI.text = username;
             cardsUI.text = cards.ToString();
@@ -90,12 +105,12 @@ public class UserManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (stream.IsWriting) //if client is owner of UserManager, sends all data
         {
-            stream.SendNext(playerNumber);
+            stream.SendNext(playerActorNumber);
             stream.SendNext(username);
             stream.SendNext(cards);
         } else //if client is not owner of UserManager, recieves data
         {
-            playerNumber = (int)stream.ReceiveNext();
+            playerActorNumber = (int)stream.ReceiveNext();
             username = (string)stream.ReceiveNext();
             cards = (int)stream.ReceiveNext();
         }

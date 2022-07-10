@@ -30,7 +30,7 @@ public class HandManager : MonoBehaviour
             cardHover = null;
             for (int i = 0; i < 21; i++)
             {
-            if (Camera.main.ScreenToWorldPoint(Input.mousePosition).x <= cardObjects[i].trans.position.x + 1.0f/6.0f && Camera.main.ScreenToWorldPoint(Input.mousePosition).x >= cardObjects[i].trans.position.x - .5 && Camera.main.ScreenToWorldPoint(Input.mousePosition).y <= -3)
+                if (Camera.main.ScreenToWorldPoint(Input.mousePosition).x <= cardObjects[i].trans.position.x + 1.0f/6.0f && Camera.main.ScreenToWorldPoint(Input.mousePosition).x >= cardObjects[i].trans.position.x - .5 && Camera.main.ScreenToWorldPoint(Input.mousePosition).y <= -3)
                 { //determines if cursor is hovering over each card, sends the card up if it's being hovered over
                     var step = speed * Time.deltaTime;
                     targetUp.x = cardObjects[i].trans.position.x;
@@ -44,8 +44,8 @@ public class HandManager : MonoBehaviour
                     targetDown.z = cardObjects[i].trans.position.z;
                     cardObjects[i].trans.position = Vector3.MoveTowards(cardObjects[i].trans.position, targetDown, step); // moves card down
                 }
-            cardObjects[i].cardCurrent = cards[i];
-            cardObjects[i].updateSprite(); //updates sprite of card
+                cardObjects[i].cardCurrent = cards[i];
+                cardObjects[i].updateSprite(); //updates sprite of card
             }
         } else  
         {

@@ -7,13 +7,19 @@ using Photon.Pun;
 
 public class UserManager : MonoBehaviourPunCallbacks, IPunObservable
 {
+    #region vars
     public int playerNumber;
+    public int symbolNumber;
     public string username;
     public int cards;
     public Vector2 pos;
     public Sprite[] sprites;
     public Sprite sprite;
+    public Photon.Realtime.Player[] playerList;
+    public int[] playerNumberList;
+    #endregion
 
+    #region refs
     public PhotonView pv;
     public HandManager hm;
     public RectTransform rt;
@@ -21,12 +27,13 @@ public class UserManager : MonoBehaviourPunCallbacks, IPunObservable
     public TextMeshProUGUI usernameUI;
     public Image symbolUI;
     public Canvas canvas;
+    #endregion
 
     void Start()
     {
+        playerList = new Photon.Realtime.Player[25];
         if (pv.IsMine)
         {
-            playerNumber = PhotonNetwork.LocalPlayer.ActorNumber;
             username = PlayerPrefs.GetString("Username");
         }
         hm = Object.FindObjectOfType<HandManager>();
@@ -35,6 +42,28 @@ public class UserManager : MonoBehaviourPunCallbacks, IPunObservable
 
     void Update()
     {
+        for (int i = 0; i < 25; i++)
+        {
+            if (i < PhotonNetwork.PlayerList.Length)
+            {
+                playerList[i] = PhotonNetwork.PlayerList[i];
+            } else
+            {
+                playerList[i] = null;
+            }
+            if (playerList[i] == null)
+            {
+                playerNumberList[i] = -1;
+            } else
+            {
+                playerNumberList[i] = playerList[i].ActorNumber;
+            }
+            if (playerNumberList[i] == PhotonNetwork.LocalPlayer.ActorNumber)
+            {
+                playerNumber = i;
+            }
+        }
+        symbolNumber = playerNumber;
         if (pv.IsMine)
         {
             cards = hm.countHand();
@@ -47,7 +76,7 @@ public class UserManager : MonoBehaviourPunCallbacks, IPunObservable
             cardsUI.text = cards.ToString();
             for (int i = 0; i < sprites.Length; i++)
             {
-                if ("PlayerMarkers_" + (playerNumber - 1).ToString() == sprites[i].name)
+                if ("PlayerMarkers_" + symbolNumber.ToString() == sprites[i].name)
                 {
                     sprite = sprites[i];
                 }

@@ -54,8 +54,9 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
 
     public void Update()
     {
-        if (cardCurrent != "none" && hm.cardSelected && (cardCurrent.Substring(0, 1) == "J" || cardCurrent.Remove (0, 1) == "1" || hm.cardHover.cardCurrent.Substring(0, 1) == "J" || hm.cardHover.cardCurrent.Remove (0, 1) == "1" || cardCurrent.Remove(0, 1) == hm.cardHover.cardCurrent.Remove(0, 1)) && !((cardCurrent.Substring(0, 1) == "J" || cardCurrent.Remove (0, 1) == "1") && lastPlayer == -1))
-        { //determines if a card is selected, and if so, if this is a Joker or Ace, or if selected card is a Joker, Ace, or same value as cardCurrent
+        um = Object.FindObjectOfType<UserManager>(); //finds any user manager to get own player number
+        if (cardCurrent != "none" && hm.cardHover != null && um.selfPlayerNumber != lastPlayer && (cardCurrent.Substring(0, 1) == "J" || cardCurrent.Remove (0, 1) == "1" || hm.cardHover.cardCurrent.Substring(0, 1) == "J" || hm.cardHover.cardCurrent.Remove (0, 1) == "1" || cardCurrent.Remove(0, 1) == hm.cardHover.cardCurrent.Remove(0, 1)) && !((cardCurrent.Substring(0, 1) == "J" || cardCurrent.Remove (0, 1) == "1") && lastPlayer == -1))
+        { //determines if this is a Joker or Ace, or if selected card is a Joker, Ace, or same value as cardCurrent
             isPlayable = true; //allows card to be played on this card
         } else
         {
@@ -64,7 +65,6 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
         cardGlow.enabled = isPlayable; //glows if a card can be played, does not glow if a card cannot be played
         if (isPlayable && Input.GetKeyDown(KeyCode.Mouse0) && isMouseOnCard())
         { //checks if a card can be played and the player clicked on this card
-            um = Object.FindObjectOfType<UserManager>(); //finds any user manager   
             pv.RPC("playCard", RpcTarget.All, hm.cardHover.cardCurrent, um.selfPlayerNumber); //calls playCard rpc
             hm.cardSelected = false;
         }

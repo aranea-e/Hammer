@@ -29,7 +29,10 @@ public class DeckManager : MonoBehaviourPunCallbacks, IPunObservable
 
     void Update()
     {
-
+        if (Input.GetKeyDown("e") && pv.IsMine)
+        {
+            drawTable();
+        }
     }
 
     #region functions

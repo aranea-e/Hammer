@@ -74,8 +74,18 @@ public class HandManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Mouse0) && cardHover != null && cardHover.cardCurrent != "none")
         {
-
-            cardSelected = !cardSelected;
+            bool tableCardHover = false;
+            for (int i = 0; i < 12; i++)
+            {
+                if (dm.cardObjects[i].isMouseOnCard())
+                {
+                    tableCardHover = true;
+                }
+            }
+            if (!tableCardHover)
+            {
+                cardSelected = !cardSelected;
+            }
 
         }
         if (Input.GetKeyDown("space"))

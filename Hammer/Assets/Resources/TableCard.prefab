@@ -184,7 +184,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0513b66132a32841ab1d487adf66219, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardCurrent: 
+  cardCurrent: none
   cardStack: []
   cardNumber: 0
   cardLocation: {x: 0, y: 0}

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class HandManager : MonoBehaviour
 {
@@ -10,19 +11,17 @@ public class HandManager : MonoBehaviour
     public HandCard cardHover;
     public bool cardSelected;
     public int cardCount;
+    private int CardNumber;
 
     public HandCard[] cardObjects;
     public string[] cards;
     public DeckManager dm;
     public SpriteRenderer cardGlowSR;
     public Transform cardGlowTR;
+    public PhotonView dmPV;
+    public UserManager um;
 
-    public void Start()
-    {
-        dm = Object.FindObjectOfType<DeckManager>();
-    }
-
-    public void Update()
+    void Update()
     {
         if (cardSelected == false) // detects if a card has already been selected
         {
@@ -88,19 +87,24 @@ public class HandManager : MonoBehaviour
             }
 
         }
-        if (Input.GetKeyDown("space"))
+        if (Input.GetKeyDown("space") && countHand() < 21)
         {
-            dm = Object.FindObjectOfType<DeckManager>();
-            bool cont = false;
-            for (int i = 0; i < 21 && !cont; i++)
+            um = Object.FindObjectOfType<UserManager>();
+            dmPV.RPC("requestDrawCard", RpcTarget.All, um.selfPlayerNumber);
+        }
+    }
+
+    public void addCardToHand(string Card)
+    {
+        bool cont = false;
+        for (int i = 0; i < 21 && !cont; i++)
             {
                 if (cards[i] == "none")
                 {
-                    cards[i] = dm.drawCard();
+                    cards[i] = Card;
                     cont = true;
                 }
             }
-        }
     }
 
     public int countHand()
@@ -114,5 +118,128 @@ public class HandManager : MonoBehaviour
             }
         }
         return cardCount;
+    }
+
+    public void removeCard(HandCard Card)
+    {
+        for (int i = 0; i < 21; i++)
+        { //finds the number of Card
+            if (Card == cardObjects[i])
+            { 
+                CardNumber = i;
+            }
+        }
+        if (countHand() == 1)
+        {
+            cards[0] = "none"; //if only one card is in hand, sets it to none
+
+        } else if (countHand() == 2)
+        {
+            cards[1] = "none"; //if only two cards are in hand, sets 1 and 2 to none
+            cards[2] = "none";
+        } else if (CardNumber == 0)
+        {
+            if (countHand() % 2 == 0)  //if card to remove is 0, determines which side to remove from
+            {
+                //removes from left, brings cards right
+                for (int i = 0; i < 21; i += 2)
+                {
+                    if (i + 2 < cards.Length) //checks to make sure the next card is in the array
+                    {
+                        cards[i] = cards[i + 2]; //sets card to next card out
+                    } else
+                    {
+                        cards[i] = "none"; //sets card to none if the value would be out of the array
+                    }
+                }
+            } else
+            {
+                //removes from right, brings cards left
+                cards[0] = cards[1];
+                for (int i = 1; i < 21; i += 2)
+                {
+                    if (i + 2 < cards.Length) //checks to make sure the next card is in the array
+                    {
+                        cards[i] = cards[i + 2]; //sets card to next card out
+                    } else
+                    {
+                        cards[i] = "none"; //sets card to none if the value would be out of the array
+                    }
+                }
+            }
+        } else
+        {
+            if (CardNumber % 2 == 0)
+            {
+                //card is left of 0
+                if (countHand() % 2 == 0)
+                {
+                    //removes from left, brings cards right
+                    for (int i = CardNumber; i < 21; i += 2)
+                    {
+                        if (i + 2 < cards.Length) //checks to make sure the next card is in the array
+                        {
+                            cards[i] = cards[i + 2]; //sets card to next card out
+                        } else
+                        {
+                            cards[i] = "none"; //sets card to none if the value would be out of the array
+                        }
+                    }
+                } else
+                {
+                    //removes from right, brings cards left
+                    for (int i = CardNumber; i != 0; i -= 2) //goes as normal until it hits 0
+                    {
+                        cards[i] = cards[i - 2];
+                    }
+                    cards[0] = cards[1]; //sets 0 to 1
+                    for (int i = 1; i < 21; i += 2) //continues as normal from 1
+                    {
+                        if (i + 2 < cards.Length) //checks to make sure the next card is in the array
+                        {
+                            cards[i] = cards[i + 2]; //sets card to next card out
+                        } else
+                        {
+                            cards[i] = "none"; //sets card to none if the value would be out of the array
+                        }
+                    }
+                }
+            } else
+            {
+                //card is right of 0
+                if (countHand() % 2 == 0)
+                {
+                    //removes from left, brings cards right
+                    for (int i = CardNumber; i != 1; i -= 2) //goes as normal until it hits 1
+                    {
+                        cards[i] = cards[i - 2];
+                    }
+                    cards[1] = cards[0]; //sets 1 to 0
+                    for (int i = 0; i < 21; i += 2) //continues as normal from 2
+                    {
+                        if (i + 2 < cards.Length) //checks to make sure the next card is in the array
+                        {
+                            cards[i] = cards[i + 2]; //sets card to next card out
+                        } else
+                        {
+                            cards[i] = "none"; //sets card to none if the value would be out of the array
+                        }
+                    }
+                } else
+                {
+                    //removes from right, brings cards left
+                    for (int i = CardNumber; i < 21; i += 2)
+                    {
+                        if (i + 2 < cards.Length) //checks to make sure the next card is in the array
+                        {
+                            cards[i] = cards[i + 2]; //sets card to next card out
+                        } else
+                        {
+                            cards[i] = "none"; //sets card to none if the value would be out of the array
+                        }
+                    }
+                }
+            }
+        }
     }
 }

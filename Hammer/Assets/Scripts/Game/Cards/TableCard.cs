@@ -66,6 +66,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
         if (isPlayable && Input.GetKeyDown(KeyCode.Mouse0) && isMouseOnCard())
         { //checks if a card can be played and the player clicked on this card
             pv.RPC("playCard", RpcTarget.All, hm.cardHover.cardCurrent, um.selfPlayerNumber); //calls playCard rpc
+            hm.removeCard(hm.cardHover);
             hm.cardSelected = false;
         }
         updateSprite();
@@ -97,6 +98,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
         if (cardCurrent == "none") //if no card was drawn, hides the sprite
         {
             sr.enabled = false;
+            playerMarker.enabled = false;
         } else
         {
             for (int i = 0; i < sprites.Length; i++) //finds sprite that matches cardCurrent

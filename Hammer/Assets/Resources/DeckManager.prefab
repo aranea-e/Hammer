@@ -170,9 +170,11 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  pv: {fileID: 0}
+  pv: {fileID: 4685274199829902946}
   sr: {fileID: 3720617662342409076}
+  hm: {fileID: 0}
   textmesh: {fileID: 7413956954706891934}
+  um: {fileID: 0}
 --- !u!114 &4685274199829902946
 MonoBehaviour:
   m_ObjectHideFlags: 0

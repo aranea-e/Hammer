@@ -17,12 +17,16 @@ public class DeckManager : MonoBehaviourPunCallbacks, IPunObservable
     public TableCard[] cardObjects;
     public PhotonView pv;
     public SpriteRenderer sr;
+    public HandManager hm;
     public TextMeshProUGUI textmesh;
+    public UserManager um;
     #endregion
 
-    void Start()
+    void Awake()
     {
-        pv = GetComponent<PhotonView>();
+        hm = Object.FindObjectOfType<HandManager>();
+        hm.dm = this;
+        hm.dmPV = pv;
         ResetDeck();
         Shuffle();
     }
@@ -33,6 +37,7 @@ public class DeckManager : MonoBehaviourPunCallbacks, IPunObservable
         {
             drawTable();
         }
+        um = Object.FindObjectOfType<UserManager>();
     }
 
     #region functions
@@ -56,6 +61,24 @@ public class DeckManager : MonoBehaviourPunCallbacks, IPunObservable
             deck[i] = deckFull[i]; //copies values from deckFull, a full sorted deck
         }
         updateDeckSprite(); //updates the deck to reflect change
+    }
+
+    [PunRPC]
+    public void returnDrawnCard(int PlayerNumber, string Card)
+    {
+        if (um.selfPlayerNumber == PlayerNumber)
+        {
+            hm.addCardToHand(Card);
+        }
+    }
+
+    [PunRPC]
+    public void requestDrawCard(int PlayerNumber)
+    {
+        if (pv.IsMine)
+        {
+            pv.RPC("returnDrawnCard", RpcTarget.All, PlayerNumber, drawCard()); //draws a card and returns to client who requested
+        }
     }
 
     public string drawCard()

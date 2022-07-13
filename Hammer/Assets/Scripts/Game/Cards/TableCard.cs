@@ -60,10 +60,38 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
     public void Update()
     {
         um = Object.FindObjectOfType<UserManager>(); //finds any user manager to get own player number
-        if (cardCurrent == "none" || hm.cardHover == null || (lastPlayer == -1 && (cardCurrent.Substring(0, 1) == "J" || cardCurrent.Remove (0, 1) == "1")))
+        if (hm.cardHover != null)
+        {
+            if (lastPlayer != -1 && (cardCurrent.Substring(0, 1) == "J" || cardCurrent.Remove (0, 1) == "1"))
+            { //checks whether the top card is a J/A
+                cardGlow.enabled = false;
+                JAcg.enabled = canPlayCard(hm.cardHover.cardCurrent); ////glows if a card can be played, does not glow if a card cannot be played
+            } else
+            {
+                cardGlow.enabled = canPlayCard(hm.cardHover.cardCurrent); //glows if a card can be played, does not glow if a card cannot be played
+                JAcg.enabled = false;
+            }
+        } else
+        {
+            cardGlow.enabled = false;
+            JAcg.enabled = false;
+        }
+        
+        if (hm.cardHover != null && canPlayCard(hm.cardHover.cardCurrent) && Input.GetKeyDown(KeyCode.Mouse0) && isMouseOnCard())
+        { //checks if a card can be played and the player clicked on this card
+            pv.RPC("playCard", RpcTarget.All, hm.cardHover.cardCurrent, hm.cardHover.cardNumber, um.selfPlayerNumber); //calls playCard rpc
+        }
+        updateSprite();
+    }
+
+    #region functions
+
+    public bool canPlayCard(string CardToPlay)
+    {
+        if (cardCurrent == "none" || (lastPlayer == -1 && (cardCurrent.Substring(0, 1) == "J" || cardCurrent.Remove (0, 1) == "1")))
         {
             isPlayable = false;
-        } else if (lastPlayer == -1 && (hm.cardHover.cardCurrent.Substring(0, 1) == "J" || hm.cardHover.cardCurrent.Remove (0, 1) == "1"))
+        } else if (lastPlayer == -1 && (CardToPlay.Substring(0, 1) == "J" || CardToPlay.Remove (0, 1) == "1"))
         { //determines if selected card is a joker or ace and this card was not played by a player
             isPlayable = true; //allows card to be played on this card
         } else if (lastPlayer != -1 && (cardCurrent.Substring(0, 1) == "J" || cardCurrent.Remove (0, 1) == "1"))
@@ -80,49 +108,51 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
                     secondCard = 6;
                 }
             }
-            isPlayable = (um.selfPlayerNumber != lastPlayer && cardStack[secondCard].Remove(0, 1) == hm.cardHover.cardCurrent.Remove(0, 1));
+            isPlayable = (um.selfPlayerNumber != lastPlayer && cardStack[secondCard].Remove(0, 1) == CardToPlay.Remove(0, 1));
             //sets isPlayable to true if the second top card is equivalent to the selected card
-        } else if (um.selfPlayerNumber != lastPlayer && cardCurrent.Remove(0, 1) == hm.cardHover.cardCurrent.Remove(0, 1))
+        } else if (um.selfPlayerNumber != lastPlayer && cardCurrent.Remove(0, 1) == CardToPlay.Remove(0, 1))
         { //determines if selected card is the same value as cardCurrent
             isPlayable = true; //allows card to be played on this card
         } else
         {
             isPlayable = false; //disallows card to be played on this card
         }
-        if (lastPlayer != -1 && (cardCurrent.Substring(0, 1) == "J" || cardCurrent.Remove (0, 1) == "1"))
-        { //checks whether the top card is a J/A
-            cardGlow.enabled = false;
-            JAcg.enabled = isPlayable; ////glows if a card can be played, does not glow if a card cannot be played
-        } else
-        {
-            cardGlow.enabled = isPlayable; //glows if a card can be played, does not glow if a card cannot be played
-            JAcg.enabled = false;
-        }
-        if (isPlayable && Input.GetKeyDown(KeyCode.Mouse0) && isMouseOnCard())
-        { //checks if a card can be played and the player clicked on this card
-            pv.RPC("playCard", RpcTarget.All, hm.cardHover.cardCurrent, um.selfPlayerNumber); //calls playCard rpc
-            hm.removeCard(hm.cardHover);
-            hm.cardSelected = false;
-        }
-        updateSprite();
+        return isPlayable;
     }
 
-    #region functions
+    [PunRPC]
+    public void playCard(string Card, int CardObjectNumber, int Number)
+    {
+        if (pv.IsMine)
+        {
+            bool cardPlayedSuccessfully = false;
+            if (canPlayCard(Card))
+            {
+                Debug.Log("success");
+                bool cont = false;
+                for (int i = 0; i < 8 && !cont; i++)
+                {
+                    if (cardStack[i] == "none") //adds played card to array of cards played at this location
+                    {
+                        cardStack[i] = Card;
+                        cardPlayers[i] = Number;
+                        cont = true;
+                    }
+                }
+                updateCurrentCard();
+                cardPlayedSuccessfully = true;
+            } 
+            pv.RPC("returnCardResult", RpcTarget.All, cardPlayedSuccessfully, CardObjectNumber, Number);
+        }
+    }
 
     [PunRPC]
-    public void playCard(string Card, int Number)
+    public void returnCardResult(bool Success, int CardObjectNumber, int Number)
     {
-        bool cont = false;
-        for (int i = 0; i < 8 && !cont; i++)
+        if (um.selfPlayerNumber == Number && Success)
         {
-            if (cardStack[i] == "none") //adds played card to array of cards played at this location
-            {
-                cardStack[i] = Card;
-                cardPlayers[i] = Number;
-                cont = true;
-            }
+            hm.removeCard(CardObjectNumber);
         }
-        updateCurrentCard();
     }
 
     public void updateCurrentCard()

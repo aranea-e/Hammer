@@ -11,7 +11,6 @@ public class HandManager : MonoBehaviour
     public HandCard cardHover;
     public bool cardSelected;
     public int cardCount;
-    private int CardNumber;
 
     public HandCard[] cardObjects;
     public string[] cards;
@@ -20,6 +19,14 @@ public class HandManager : MonoBehaviour
     public Transform cardGlowTR;
     public PhotonView dmPV;
     public UserManager um;
+
+    void Start()
+    {
+        for (int i = 0; i < 21; i++)
+        {
+            cardObjects[i].cardNumber = i;
+        }
+    }
 
     void Update()
     {
@@ -120,14 +127,11 @@ public class HandManager : MonoBehaviour
         return cardCount;
     }
 
-    public void removeCard(HandCard Card)
+    public void removeCard(int Card)
     {
-        for (int i = 0; i < 21; i++)
-        { //finds the number of Card
-            if (Card == cardObjects[i])
-            { 
-                CardNumber = i;
-            }
+        if (cardSelected && cardHover == cardObjects[Card])
+        {
+            cardSelected = !cardSelected;
         }
         if (countHand() == 1)
         {
@@ -137,7 +141,7 @@ public class HandManager : MonoBehaviour
         {
             cards[1] = "none"; //if only two cards are in hand, sets 1 and 2 to none
             cards[2] = "none";
-        } else if (CardNumber == 0)
+        } else if (Card == 0)
         {
             if (countHand() % 2 == 0)  //if card to remove is 0, determines which side to remove from
             {
@@ -169,13 +173,13 @@ public class HandManager : MonoBehaviour
             }
         } else
         {
-            if (CardNumber % 2 == 0)
+            if (Card % 2 == 0)
             {
                 //card is left of 0
                 if (countHand() % 2 == 0)
                 {
                     //removes from left, brings cards right
-                    for (int i = CardNumber; i < 21; i += 2)
+                    for (int i = Card; i < 21; i += 2)
                     {
                         if (i + 2 < cards.Length) //checks to make sure the next card is in the array
                         {
@@ -188,7 +192,7 @@ public class HandManager : MonoBehaviour
                 } else
                 {
                     //removes from right, brings cards left
-                    for (int i = CardNumber; i != 0; i -= 2) //goes as normal until it hits 0
+                    for (int i = Card; i != 0; i -= 2) //goes as normal until it hits 0
                     {
                         cards[i] = cards[i - 2];
                     }
@@ -210,7 +214,7 @@ public class HandManager : MonoBehaviour
                 if (countHand() % 2 == 0)
                 {
                     //removes from left, brings cards right
-                    for (int i = CardNumber; i != 1; i -= 2) //goes as normal until it hits 1
+                    for (int i = Card; i != 1; i -= 2) //goes as normal until it hits 1
                     {
                         cards[i] = cards[i - 2];
                     }
@@ -228,7 +232,7 @@ public class HandManager : MonoBehaviour
                 } else
                 {
                     //removes from right, brings cards left
-                    for (int i = CardNumber; i < 21; i += 2)
+                    for (int i = Card; i < 21; i += 2)
                     {
                         if (i + 2 < cards.Length) //checks to make sure the next card is in the array
                         {

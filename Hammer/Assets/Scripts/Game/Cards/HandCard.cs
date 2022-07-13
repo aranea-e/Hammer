@@ -7,6 +7,7 @@ public class HandCard : MonoBehaviour
     public Sprite[] sprites;
     public Sprite sprite;
     public string cardCurrent;
+    public int cardNumber;
     
     public HandManager hm;
     public SpriteRenderer sr;

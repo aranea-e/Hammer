@@ -14,16 +14,21 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
     public Vector2 cardLocation;
     public Sprite sprite;
     public Sprite[] sprites;
-    public Sprite playerMarkerSprite;
     public Sprite[] playerMarkerSprites;
+    public Sprite[] timerSprites;
     public bool isPlayable;
     public int lastPlayer;
+    public bool timerActive;
+    public float timerTime;
+    public int timerStage;
+    public float timerCooldown;
     #endregion
 
     #region references
     public DeckManager dm;
     public HandManager hm;
     public Spawn Spawn;
+    public Discard discard;
     public UserManager um;
     public Transform trans;
     public SpriteRenderer sr;
@@ -32,6 +37,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
     public SpriteRenderer JApm;
     public SpriteRenderer cardGlow;
     public SpriteRenderer JAcg;
+    public SpriteRenderer timer;
     public PhotonView pv;
     #endregion
 
@@ -40,6 +46,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
         dm = Object.FindObjectOfType<DeckManager>(); //sets references
         hm = Object.FindObjectOfType<HandManager>();
         Spawn = Object.FindObjectOfType<Spawn>();
+        discard = Object.FindObjectOfType<Discard>();
         bool cont = false;
         cardLocation.x = trans.position.x; //takes Vector2 cardLocation to determine which number card this is
         cardLocation.y = trans.position.y;
@@ -55,6 +62,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
         }
         sprites = Resources.LoadAll<Sprite>("Sprites/Cards"); //loads spritesheet of cards for later use
         playerMarkerSprites = Resources.LoadAll<Sprite>("Sprites/PlayerMarkers");
+        timerSprites = Resources.LoadAll<Sprite>("Sprites/Clock");
     }
 
     public void Update()
@@ -65,10 +73,10 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
             if (lastPlayer != -1 && (cardCurrent.Substring(0, 1) == "J" || cardCurrent.Remove (0, 1) == "1"))
             { //checks whether the top card is a J/A
                 cardGlow.enabled = false;
-                JAcg.enabled = canPlayCard(hm.cardHover.cardCurrent); ////glows if a card can be played, does not glow if a card cannot be played
+                JAcg.enabled = canPlayCard(hm.cardHover.cardCurrent, um.selfPlayerNumber); ////glows if a card can be played, does not glow if a card cannot be played
             } else
             {
-                cardGlow.enabled = canPlayCard(hm.cardHover.cardCurrent); //glows if a card can be played, does not glow if a card cannot be played
+                cardGlow.enabled = canPlayCard(hm.cardHover.cardCurrent, um.selfPlayerNumber); //glows if a card can be played, does not glow if a card cannot be played
                 JAcg.enabled = false;
             }
         } else
@@ -77,18 +85,52 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
             JAcg.enabled = false;
         }
         
-        if (hm.cardHover != null && canPlayCard(hm.cardHover.cardCurrent) && Input.GetKeyDown(KeyCode.Mouse0) && isMouseOnCard())
+        if (hm.cardHover != null && canPlayCard(hm.cardHover.cardCurrent, um.selfPlayerNumber) && Input.GetKeyDown(KeyCode.Mouse0) && isMouseOnCard())
         { //checks if a card can be played and the player clicked on this card
             pv.RPC("playCard", RpcTarget.All, hm.cardHover.cardCurrent, hm.cardHover.cardNumber, um.selfPlayerNumber); //calls playCard rpc
+        }
+        if (timerActive) //checks if this card has an active timer
+        {
+            timerTime += Time.deltaTime;
+            if (timerTime >= 1f) //sees if 1 second has passed since the last time stage
+            {
+                timerTime = timerTime % 1f;
+                advanceTimer(); //advances the timer
+            }
+        }
+        if (timerCooldown <= 1f) //a cooldown to prevent clients from seeing cards drawn twice
+        {
+            timerCooldown += Time.deltaTime;
         }
         updateSprite();
     }
 
     #region functions
 
-    public bool canPlayCard(string CardToPlay)
+    public void advanceTimer()
     {
-        if (cardCurrent == "none" || (lastPlayer == -1 && (cardCurrent.Substring(0, 1) == "J" || cardCurrent.Remove (0, 1) == "1")))
+        timerStage++;
+        if (timerStage > 8)
+        {
+            timerStage = 0;
+            timerActive = false;
+            onTimerExpire();
+        }
+    }
+
+    public void onTimerExpire()
+    {
+        discard.discardCard(cardCurrent);
+        if (timerCooldown > 1f)
+        {
+           drawCard(); 
+           timerCooldown = 0f;
+        }
+    }
+
+    public bool canPlayCard(string CardToPlay, int Number)
+    {
+        if (Number == lastPlayer || cardCurrent == "none" || (lastPlayer == -1 && (cardCurrent.Substring(0, 1) == "J" || cardCurrent.Remove (0, 1) == "1")))
         {
             isPlayable = false;
         } else if (lastPlayer == -1 && (CardToPlay.Substring(0, 1) == "J" || CardToPlay.Remove (0, 1) == "1"))
@@ -108,9 +150,9 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
                     secondCard = 6;
                 }
             }
-            isPlayable = (um.selfPlayerNumber != lastPlayer && cardStack[secondCard].Remove(0, 1) == CardToPlay.Remove(0, 1));
+            isPlayable = (cardStack[secondCard].Remove(0, 1) == CardToPlay.Remove(0, 1));
             //sets isPlayable to true if the second top card is equivalent to the selected card
-        } else if (um.selfPlayerNumber != lastPlayer && cardCurrent.Remove(0, 1) == CardToPlay.Remove(0, 1))
+        } else if (cardCurrent.Remove(0, 1) == CardToPlay.Remove(0, 1))
         { //determines if selected card is the same value as cardCurrent
             isPlayable = true; //allows card to be played on this card
         } else
@@ -126,9 +168,8 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
         if (pv.IsMine)
         {
             bool cardPlayedSuccessfully = false;
-            if (canPlayCard(Card))
+            if (canPlayCard(Card, Number))
             {
-                Debug.Log("success");
                 bool cont = false;
                 for (int i = 0; i < 8 && !cont; i++)
                 {
@@ -140,6 +181,9 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
                     }
                 }
                 updateCurrentCard();
+                timerActive = true;
+                timerTime = 0f;
+                timerStage = 0;
                 cardPlayedSuccessfully = true;
             } 
             pv.RPC("returnCardResult", RpcTarget.All, cardPlayedSuccessfully, CardObjectNumber, Number);
@@ -231,20 +275,13 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
                 }
                 if (cardPlayers[secondCard] != -1) //checks if a player played this card
                 {
-                    for (int i = 0; i < playerMarkerSprites.Length; i++) //finds the correct marker based on player who played card
-                    {
-                        if ("PlayerMarkers_" + cardPlayers[secondCard].ToString() == playerMarkerSprites[i].name)
-                        {
-                            playerMarkerSprite = playerMarkerSprites[i];
-                        }
-                    }
+                    playerMarker.sprite = playerMarkerSprites[cardPlayers[secondCard]];
                     playerMarker.enabled = true; //enables player marker
                 } else
                 {
                     playerMarker.enabled = false; //disables player marker
                 }
                 sr.sprite = sprite; //sets sprite
-                playerMarker.sprite = playerMarkerSprite;
                 for (int i = 0; i < sprites.Length; i++) //runs above code again for the J/A
                 {
                     if (cardCurrent == sprites[i].name)
@@ -254,13 +291,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
                 }
                 if (lastPlayer != -1)
                 {
-                    for (int i = 0; i < playerMarkerSprites.Length; i++)
-                    {
-                        if ("PlayerMarkers_" + lastPlayer.ToString() == playerMarkerSprites[i].name)
-                        {
-                            playerMarkerSprite = playerMarkerSprites[i];
-                        }
-                    }
+                    JApm.sprite = playerMarkerSprites[lastPlayer];
                     JApm.enabled = true; //enables J/A player marker
                 } else
                 {
@@ -268,7 +299,6 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
                 }
                 JAsr.enabled = true;
                 JAsr.sprite = sprite; //sets sprite
-                JApm.sprite = playerMarkerSprite;
             } else //if a card is not a joker or ace, displays it and hides the second card
             {
                 for (int i = 0; i < sprites.Length; i++) //finds sprite that matches cardCurrent
@@ -280,24 +310,22 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
                 }
                 if (lastPlayer != -1) //checks if a player played this card
                 {
-                    for (int i = 0; i < playerMarkerSprites.Length; i++) //finds the correct marker based on player who played card
-                    {
-                        if ("PlayerMarkers_" + lastPlayer.ToString() == playerMarkerSprites[i].name)
-                        {
-                            playerMarkerSprite = playerMarkerSprites[i];
-                        }
-                    }
+                    playerMarker.sprite = playerMarkerSprites[lastPlayer];
                     playerMarker.enabled = true; //enables player marker
                 } else
                 {
                     playerMarker.enabled = false; //disables player marker
                 }
                 sr.sprite = sprite; //sets sprite
-                playerMarker.sprite = playerMarkerSprite;
                 sr.enabled = true; //enables the sprite in case it was previously none
                 JApm.enabled = false;
                 JAsr.enabled = false;
             }
+        }
+        timer.enabled = timerActive;
+        if (timerActive)
+        {
+            timer.sprite = timerSprites[timerStage];
         }
     }
     #endregion
@@ -311,6 +339,9 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
                 stream.SendNext(cardStack[i]);
                 stream.SendNext(cardPlayers[i]);
             }
+            stream.SendNext(timerStage);
+            stream.SendNext(timerActive);
+            stream.SendNext(timerTime);
         } else //if client is not owner of cards, recieves cards from server and updates the sprite
         {
             for (int i = 0; i < 8; i++)
@@ -318,6 +349,9 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
                 cardStack[i] = (string)stream.ReceiveNext();
                 cardPlayers[i] = (int)stream.ReceiveNext();
             }
+            timerStage = (int)stream.ReceiveNext();
+            timerActive = (bool)stream.ReceiveNext();
+            timerTime = (float)stream.ReceiveNext();
             updateSprite();
         }
     }

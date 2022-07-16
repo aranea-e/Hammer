@@ -139,8 +139,21 @@ public class HandManager : MonoBehaviour
 
         } else if (countHand() == 2)
         {
-            cards[1] = "none"; //if only two cards are in hand, sets 1 and 2 to none
-            cards[2] = "none";
+            if (Card > 0)
+            {
+                cards[Card] = "none"; //if the discarded card is 1 or 2, sets it to none
+            } else
+            {
+                if (cards[1] != "none") //if the discarded card is 0, sets the other card to none after replacing 0
+                {
+                    cards[0] = cards[1];
+                    cards[1] = "none";
+                } else
+                {
+                    cards[0] = cards[2];
+                    cards[2] = "none";
+                }
+            }
         } else if (Card == 0)
         {
             if (countHand() % 2 == 0)  //if card to remove is 0, determines which side to remove from

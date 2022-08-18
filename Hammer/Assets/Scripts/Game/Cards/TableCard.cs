@@ -16,6 +16,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
     public Sprite[] sprites;
     public Sprite[] playerMarkerSprites;
     public Sprite[] timerSprites;
+    public Sprite[] symbolSprites;
     public bool isPlayable;
     public int lastPlayer;
     public bool timerActive;
@@ -38,6 +39,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
     public SpriteRenderer cardGlow;
     public SpriteRenderer JAcg;
     public SpriteRenderer timer;
+    public SpriteRenderer symbolSR;
     public PhotonView pv;
     public GameManager Game;
     #endregion
@@ -65,6 +67,8 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
         sprites = Resources.LoadAll<Sprite>("Sprites/Cards"); //loads spritesheet of cards for later use
         playerMarkerSprites = Resources.LoadAll<Sprite>("Sprites/PlayerMarkers");
         timerSprites = Resources.LoadAll<Sprite>("Sprites/Clock");
+        symbolSprites = Resources.LoadAll<Sprite>("Sprites/Card Interactions");
+        
     }
 
     public void Update()
@@ -108,6 +112,19 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
     }
 
     #region functions
+
+    public int countStack()
+    {
+        int cardCount = 0;
+        for (int i = 0; i < 8; i++)
+        {
+            if (cardStack[i] != "none")
+            {
+                cardCount++;
+            }
+        }
+        return cardCount;
+    }
 
     public void advanceTimer()
     {
@@ -252,6 +269,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
             playerMarker.enabled = false;
             JAsr.enabled = false;
             JApm.enabled = false;
+            symbolSR.enabled = false;
         } else
         {
             if ((cardCurrent.Substring(0, 1) == "J" || cardCurrent.Remove (0, 1) == "1") && lastPlayer != -1) //if a card is a played joker or ace, find the next card and put the J/A on top
@@ -322,6 +340,23 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
                 sr.enabled = true; //enables the sprite in case it was previously none
                 JApm.enabled = false;
                 JAsr.enabled = false;
+            }
+            if (cardCurrent.Substring(0, 1) == "J" && countStack() > 1)
+            {
+                symbolSR.enabled = true;
+                symbolSR.sprite = symbolSprites[1];
+            }
+            if (countStack() < 3 && !(cardCurrent.Substring(0, 1) == "J" && countStack() > 1))
+            {
+                symbolSR.enabled = false;
+            } else if (countStack() == 3)
+            {
+                symbolSR.enabled = true;
+                symbolSR.sprite = symbolSprites[2];
+            } else if (countStack() > 3)
+            {
+                symbolSR.enabled = true;
+                symbolSR.sprite = symbolSprites[0];
             }
         }
         timer.enabled = timerActive;

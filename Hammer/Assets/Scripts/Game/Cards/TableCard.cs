@@ -39,12 +39,14 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
     public SpriteRenderer JAcg;
     public SpriteRenderer timer;
     public PhotonView pv;
+    public GameManager Game;
     #endregion
 
     void Start()
     {
         dm = Object.FindObjectOfType<DeckManager>(); //sets references
         hm = Object.FindObjectOfType<HandManager>();
+        Game = Object.FindObjectOfType<GameManager>();
         Spawn = Object.FindObjectOfType<Spawn>();
         discard = Object.FindObjectOfType<Discard>();
         bool cont = false;
@@ -89,7 +91,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
         { //checks if a card can be played and the player clicked on this card
             pv.RPC("playCard", RpcTarget.All, hm.cardHover.cardCurrent, hm.cardHover.cardNumber, um.selfPlayerNumber); //calls playCard rpc
         }
-        if (timerActive) //checks if this card has an active timer
+        if (timerActive && !Game.IsPaused) //checks if this card has an active timer
         {
             timerTime += Time.deltaTime;
             if (timerTime >= 1f) //sees if 1 second has passed since the last time stage
@@ -130,7 +132,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
 
     public bool canPlayCard(string CardToPlay, int Number)
     {
-        if (Number == lastPlayer || cardCurrent == "none" || (lastPlayer == -1 && (cardCurrent.Substring(0, 1) == "J" || cardCurrent.Remove (0, 1) == "1")))
+        if (Number == lastPlayer || cardCurrent == "none" || Game.IsPaused || (lastPlayer == -1 && (cardCurrent.Substring(0, 1) == "J" || cardCurrent.Remove (0, 1) == "1")))
         {
             isPlayable = false;
         } else if (lastPlayer == -1 && (CardToPlay.Substring(0, 1) == "J" || CardToPlay.Remove (0, 1) == "1"))

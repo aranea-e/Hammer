@@ -392,6 +392,7 @@ MonoBehaviour:
   JAcg: {fileID: 584658766402883362}
   timer: {fileID: 3673132024320871958}
   pv: {fileID: 6236785906236808412}
+  Game: {fileID: 0}
 --- !u!114 &6236785906236808412
 MonoBehaviour:
   m_ObjectHideFlags: 0

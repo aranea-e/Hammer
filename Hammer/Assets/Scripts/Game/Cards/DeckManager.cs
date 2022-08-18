@@ -20,6 +20,7 @@ public class DeckManager : MonoBehaviourPunCallbacks, IPunObservable
     public HandManager hm;
     public TextMeshProUGUI textmesh;
     public UserManager um;
+    public GameManager Game;
     #endregion
 
     void Awake()
@@ -27,6 +28,7 @@ public class DeckManager : MonoBehaviourPunCallbacks, IPunObservable
         hm = Object.FindObjectOfType<HandManager>();
         hm.dm = this;
         hm.dmPV = pv;
+        Game = Object.FindObjectOfType<GameManager>();
         ResetDeck();
         Shuffle();
     }
@@ -99,6 +101,10 @@ public class DeckManager : MonoBehaviourPunCallbacks, IPunObservable
             }
         }
         updateDeckSprite(); //update deck to reflect drawn card
+        if (countDeck() == 0)
+        {
+            Game.IsPaused = true;
+        }
         return temp;
     }
 

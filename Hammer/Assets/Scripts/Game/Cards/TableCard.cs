@@ -139,12 +139,29 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
 
     public void onTimerExpire()
     {
+        if (symbolSR.sprite == symbolSprites[2] && pv.IsMine)
+        {
+            bool cont = false;
+            for (int i = 0; i < 8 && !cont; i++)
+            {
+                if (cardStack[i] == "none") //finds the last card, sets the previous one to secondCard
+                {
+                    secondCard = i - 2;
+                    cont = true;
+                } else if (i == 7) //catch if the last card is card 7
+                {
+                    secondCard = 6;
+                }
+            }
+            pv.RPC("drawPenaltyCards", RpcTarget.All, cardPlayers[secondCard], 3);
+        }
         discard.discardCard(cardCurrent);
         if (timerCooldown > 1f)
         {
            drawCard(); 
            timerCooldown = 0f;
         }
+        updateSprite();
     }
 
     public bool canPlayCard(string CardToPlay, int Number)
@@ -206,6 +223,18 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
                 cardPlayedSuccessfully = true;
             } 
             pv.RPC("returnCardResult", RpcTarget.All, cardPlayedSuccessfully, CardObjectNumber, Number);
+        }
+    }
+
+    [PunRPC]
+    public void drawPenaltyCards(int PlayerNumber, int CardNumber)
+    {
+        if (um.selfPlayerNumber == PlayerNumber)
+        {
+            for (int i = 0; i < CardNumber; i++)
+            {
+                hm.drawCard();
+            }
         }
     }
 

@@ -94,7 +94,15 @@ public class HandManager : MonoBehaviour
             }
 
         }
-        if (Input.GetKeyDown("space") && countHand() < 21)
+        if (Input.GetKeyDown("space") )
+        {
+            drawCard();
+        }
+    }
+
+    public void drawCard()
+    {
+        if (countHand() < 21)
         {
             um = Object.FindObjectOfType<UserManager>();
             dmPV.RPC("requestDrawCard", RpcTarget.All, um.selfPlayerNumber);

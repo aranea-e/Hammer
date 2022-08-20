@@ -11,6 +11,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
     public int[] cardPlayers;
     public int cardNumber;
     public int secondCard;
+    public int jTarget;
     public Vector2 cardLocation;
     public Sprite sprite;
     public Sprite[] sprites;
@@ -74,7 +75,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
     public void Update()
     {
         um = Object.FindObjectOfType<UserManager>(); //finds any user manager to get own player number
-        if (hm.cardHover != null)
+        if (hm.cardHover != null && !hm.jSelected)
         {
             if (lastPlayer != -1 && (cardCurrent.Substring(0, 1) == "J" || cardCurrent.Remove (0, 1) == "1"))
             { //checks whether the top card is a J/A
@@ -93,7 +94,14 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
         
         if (hm.cardHover != null && canPlayCard(hm.cardHover.cardCurrent, um.selfPlayerNumber) && Input.GetKeyDown(KeyCode.Mouse0) && isMouseOnCard())
         { //checks if a card can be played and the player clicked on this card
-            pv.RPC("playCard", RpcTarget.All, hm.cardHover.cardCurrent, hm.cardHover.cardNumber, um.selfPlayerNumber); //calls playCard rpc
+            if (hm.cardHover.cardCurrent.Substring(0, 1) == "J") //checks if a joker was played
+            {
+                hm.jSelected = true;
+                hm.jCard = cardNumber;
+            } else
+            {
+                pv.RPC("playCard", RpcTarget.All, hm.cardHover.cardCurrent, hm.cardHover.cardNumber, um.selfPlayerNumber, -1); //calls playCard rpc
+            }
         }
         if (timerActive && !Game.IsPaused) //checks if this card has an active timer
         {
@@ -112,6 +120,15 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
     }
 
     #region functions
+
+    public void playJoker(int Player, int CardNumber)
+    {
+        if (CardNumber == cardNumber)
+        {
+            um = Object.FindObjectOfType<UserManager>();
+            pv.RPC("playCard", RpcTarget.All, hm.cardHover.cardCurrent, hm.cardHover.cardNumber, um.selfPlayerNumber, Player);
+        }
+    }
 
     public int countStack()
     {
@@ -153,7 +170,17 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
                     secondCard = 6;
                 }
             }
-            pv.RPC("drawPenaltyCards", RpcTarget.All, cardPlayers[secondCard], 3);
+            if (cardStack[1].Substring(0, 1) == "J")
+            {
+                pv.RPC("drawPenaltyCards", RpcTarget.All, cardPlayers[secondCard], 5);
+            } else
+            {
+                pv.RPC("drawPenaltyCards", RpcTarget.All, cardPlayers[secondCard], 3);
+            }
+        }
+        if (symbolSR.sprite == symbolSprites[1] && pv.IsMine)
+        {
+            pv.RPC("drawPenaltyCards", RpcTarget.All, jTarget, 2);
         }
         discard.discardCard(cardCurrent);
         if (timerCooldown > 1f)
@@ -199,7 +226,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
     }
 
     [PunRPC]
-    public void playCard(string Card, int CardObjectNumber, int Number)
+    public void playCard(string Card, int CardObjectNumber, int Number, int JTarget)
     {
         if (pv.IsMine)
         {
@@ -217,6 +244,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
                     }
                 }
                 updateCurrentCard();
+                jTarget = JTarget;
                 timerActive = true;
                 timerTime = 0f;
                 timerStage = 0;
@@ -244,6 +272,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
         if (um.selfPlayerNumber == Number && Success)
         {
             hm.removeCard(CardObjectNumber);
+            hm.jSelected = false;
         }
     }
 
@@ -280,6 +309,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
             cardStack[i] = "none";
             cardPlayers[i] = -1;
         }
+        jTarget = -1;
         cardStack[0] = dm.drawCard();
     }
 

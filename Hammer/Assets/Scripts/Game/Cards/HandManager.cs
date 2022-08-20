@@ -10,6 +10,8 @@ public class HandManager : MonoBehaviour
     public Vector3 targetDown;
     public HandCard cardHover;
     public bool cardSelected;
+    public bool jSelected;
+    public int jCard;
     public int cardCount;
 
     public HandCard[] cardObjects;
@@ -19,6 +21,8 @@ public class HandManager : MonoBehaviour
     public Transform cardGlowTR;
     public PhotonView dmPV;
     public UserManager um;
+    public UserManager[] ums;
+    public TableCard[] tcs;
 
     void Start()
     {
@@ -30,6 +34,27 @@ public class HandManager : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Mouse0) && cardHover != null && cardHover.cardCurrent != "none")
+        {
+            bool handCardHover = false;
+            for (int i = 0; i < 21; i++)
+            {
+                if (Camera.main.ScreenToWorldPoint(Input.mousePosition).x <= cardObjects[i].trans.position.x + 1.0f/6.0f && Camera.main.ScreenToWorldPoint(Input.mousePosition).x >= cardObjects[i].trans.position.x - .5 && Camera.main.ScreenToWorldPoint(Input.mousePosition).y <= -3)
+                { //checks if card i is being hovered over
+                    if (cardObjects[i].cardCurrent != "none")
+                    { //checks if card i is being displayed
+                        handCardHover = true;
+                    }
+                }
+            }
+            
+            if (handCardHover)
+            {
+                cardSelected = !cardSelected;
+                jSelected = false;
+            }
+
+        }
         if (cardSelected == false) // detects if a card has already been selected
         {
             cardGlowSR.enabled = false; //hides the glow around selected cards
@@ -76,27 +101,47 @@ public class HandManager : MonoBehaviour
                 cardObjects[i].updateSprite(); //updates sprite of card
             }
         }
-        
-
-        if (Input.GetKeyDown(KeyCode.Mouse0) && cardHover != null && cardHover.cardCurrent != "none")
+        ums = FindObjectsOfType<UserManager>();
+        if (jSelected)
         {
-            bool tableCardHover = false;
-            for (int i = 0; i < 12; i++)
+            foreach (UserManager UM in ums)
             {
-                if (dm.cardObjects[i].isMouseOnCard())
+                if (!UM.pv.IsMine)
                 {
-                    tableCardHover = true;
+                    UM.cardGlow.enabled = true;
+                    Vector2 POS;
+                    RectTransformUtility.ScreenPointToLocalPointInRectangle(UM.canvasRT, Input.mousePosition, null, out POS);
+                    if (Input.GetKeyDown(KeyCode.Mouse0) && POS.x > UM.rt.anchoredPosition.x - 24 && POS.x < UM.rt.anchoredPosition.x + 24 && POS.y > UM.rt.anchoredPosition.y - 16 && POS.y < UM.rt.anchoredPosition.y + 16)
+                    {
+                        userClicked(UM.playerNumber);
+                    }
                 }
             }
-            if (!tableCardHover)
+        } else
+        {
+            foreach (UserManager UM in ums)
             {
-                cardSelected = !cardSelected;
+                if (!UM.pv.IsMine)
+                {
+                    UM.cardGlow.enabled = false;
+                }
             }
-
         }
         if (Input.GetKeyDown("space") )
         {
             drawCard();
+        }
+    }
+
+    public void userClicked(int Player)
+    {
+        if (jSelected)
+        {
+            tcs = FindObjectsOfType<TableCard>();
+            foreach (TableCard TC in tcs)
+            {
+                TC.playJoker(Player, jCard);
+            }
         }
     }
 

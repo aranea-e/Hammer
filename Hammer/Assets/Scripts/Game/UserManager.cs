@@ -26,9 +26,11 @@ public class UserManager : MonoBehaviourPunCallbacks, IPunObservable
     public PhotonView pv;
     public HandManager hm;
     public RectTransform rt;
+    public RectTransform canvasRT;
     public TextMeshProUGUI cardsUI;
     public TextMeshProUGUI usernameUI;
     public Image symbolUI;
+    public Image cardGlow;
     public Canvas canvas;
     #endregion
 

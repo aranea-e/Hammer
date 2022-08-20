@@ -3440,6 +3440,7 @@ MonoBehaviour:
   targetDown: {x: 0, y: -4.5, z: 0}
   cardHover: {fileID: 0}
   cardSelected: 0
+  jSelected: 0
   cardCount: 0
   cardObjects:
   - {fileID: 753433733}
@@ -3490,6 +3491,32 @@ MonoBehaviour:
   cardGlowTR: {fileID: 448649117}
   dmPV: {fileID: 0}
   um: {fileID: 0}
+  ums:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!1 &2045606136
 GameObject:
   m_ObjectHideFlags: 0

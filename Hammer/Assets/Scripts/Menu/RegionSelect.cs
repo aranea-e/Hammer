@@ -16,12 +16,18 @@ public class RegionSelect : MonoBehaviourPunCallbacks
     {
         pl = Object.FindObjectOfType<PingList>();
         options.Clear();
+        int j = -1;
         for (int i = 0; i < pl.servers.Length; i++)
         {
             options.Add(pl.servers[i] + ", " + pl.pings[i] + "ms");
+            if (pl.servers[i] == PhotonNetwork.CloudRegion)
+            {
+                j = i;
+            }
         }
         dd.ClearOptions();
         dd.AddOptions(options);
+        dd.value = j;
     }
 
     public void OnChange()

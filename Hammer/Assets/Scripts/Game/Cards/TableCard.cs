@@ -41,7 +41,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
     public SpriteRenderer JAcg;
     public SpriteRenderer timer;
     public SpriteRenderer symbolSR;
-    public SpriteRenderer jMarker;
+    public SpriteRenderer targetMarker;
     public SpriteRenderer plus2;
     public PhotonView pv;
     public GameManager Game;
@@ -331,7 +331,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
             JAsr.enabled = false;
             JApm.enabled = false;
             symbolSR.enabled = false;
-            jMarker.enabled = false;
+            targetMarker.enabled = false;
             plus2.enabled = false;
         } else
         {
@@ -409,11 +409,11 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
             {
                 symbolSR.enabled = true;
                 symbolSR.sprite = symbolSprites[1];
-                jMarker.enabled = true;
-                jMarker.sprite = playerMarkerSprites[jTarget];
+                targetMarker.enabled = true;
+                targetMarker.sprite = playerMarkerSprites[jTarget];
             } else
             {
-                jMarker.enabled = false;
+                targetMarker.enabled = false;
             }
             if (countStack() < 3 && !(cardCurrent.Substring(0, 1) == "J" && countStack() > 1))
             {
@@ -422,6 +422,8 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
             {
                 symbolSR.enabled = true;
                 symbolSR.sprite = symbolSprites[2];
+                targetMarker.enabled = true;
+                targetMarker.sprite = playerMarkerSprites[cardPlayers[1]];
                 if (cardStack[1].Substring(0, 1) == "J")
                 {
                     plus2.enabled = true;

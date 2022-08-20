@@ -397,7 +397,7 @@ MonoBehaviour:
   JAcg: {fileID: 584658766402883362}
   timer: {fileID: 3673132024320871958}
   symbolSR: {fileID: 4951347154492266733}
-  jMarker: {fileID: 1923280964133546857}
+  targetMarker: {fileID: 1923280964133546857}
   plus2: {fileID: 8534033313897743195}
   pv: {fileID: 6236785906236808412}
   Game: {fileID: 0}
@@ -605,7 +605,7 @@ GameObject:
   - component: {fileID: 6463465224480724059}
   - component: {fileID: 1923280964133546857}
   m_Layer: 0
-  m_Name: JokerMarker
+  m_Name: TargetMarker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

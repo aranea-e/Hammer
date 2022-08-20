@@ -21,6 +21,7 @@ public class DeckManager : MonoBehaviourPunCallbacks, IPunObservable
     public TextMeshProUGUI textmesh;
     public UserManager um;
     public GameManager Game;
+    public Discard discard;
     #endregion
 
     void Awake()
@@ -29,6 +30,7 @@ public class DeckManager : MonoBehaviourPunCallbacks, IPunObservable
         hm.dm = this;
         hm.dmPV = pv;
         Game = Object.FindObjectOfType<GameManager>();
+        discard = Object.FindObjectOfType<Discard>();
         ResetDeck();
         Shuffle();
     }
@@ -81,6 +83,12 @@ public class DeckManager : MonoBehaviourPunCallbacks, IPunObservable
         {
             pv.RPC("returnDrawnCard", RpcTarget.All, PlayerNumber, drawCard()); //draws a card and returns to client who requested
         }
+    }
+
+    [PunRPC]
+    public void discardCard(string Card)
+    {
+        discard.discardCard(Card);
     }
 
     public string drawCard()

@@ -105,6 +105,10 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
                 pv.RPC("playCard", RpcTarget.All, hm.cardHover.cardCurrent, hm.cardHover.cardNumber, um.selfPlayerNumber, -1); //calls playCard rpc
             }
         }
+        if (cardStack[1] == "none" && (cardCurrent.Substring(0, 1) == "J" || cardCurrent.Remove (0, 1) == "1") && Input.GetKeyDown(KeyCode.Mouse0) && isMouseOnCard())
+        { //checks if player clicked on a table J/A
+            pv.RPC("takeJA", RpcTarget.All, um.selfPlayerNumber);
+        }
         if (timerActive && !Game.IsPaused) //checks if this card has an active timer
         {
             timerTime += Time.deltaTime;
@@ -257,6 +261,23 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
     }
 
     [PunRPC]
+    public void takeJA(int Number)
+    {
+        if (pv.IsMine)
+        {
+            string JANumber = "";
+            bool cardPlayedSuccessfully = false;
+            if (cardStack[1] == "none" && (cardCurrent.Substring(0, 1) == "J" || cardCurrent.Remove (0, 1) == "1"))
+            {
+                drawCard();
+                cardPlayedSuccessfully = true;
+                JANumber = cardCurrent;
+            }
+            pv.RPC("returnJAResult", RpcTarget.All, cardPlayedSuccessfully, Number, JANumber);
+        }
+    }
+
+    [PunRPC]
     public void drawPenaltyCards(int PlayerNumber, int CardNumber)
     {
         if (um.selfPlayerNumber == PlayerNumber)
@@ -275,6 +296,16 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
         {
             hm.removeCard(CardObjectNumber);
             hm.jSelected = false;
+        }
+    }
+
+    [PunRPC]
+    public void returnJAResult(bool Success, int Number, string JANumber)
+    {
+        if (um.selfPlayerNumber == Number && Success)
+        {
+            hm.addCardToHand(JANumber);
+            hm.cardsToDiscard++;
         }
     }
 

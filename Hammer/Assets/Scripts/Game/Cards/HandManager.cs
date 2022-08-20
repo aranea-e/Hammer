@@ -13,6 +13,7 @@ public class HandManager : MonoBehaviour
     public bool jSelected;
     public int jCard;
     public int cardCount;
+    public int cardsToDiscard;
 
     public HandCard[] cardObjects;
     public string[] cards;
@@ -23,6 +24,7 @@ public class HandManager : MonoBehaviour
     public UserManager um;
     public UserManager[] ums;
     public TableCard[] tcs;
+    public Trash trash;
 
     void Start()
     {
@@ -54,6 +56,15 @@ public class HandManager : MonoBehaviour
                 jSelected = false;
             }
 
+            if (Camera.main.ScreenToWorldPoint(Input.mousePosition).x <= trash.trans.position.x + 0.5f && Camera.main.ScreenToWorldPoint(Input.mousePosition).x >= trash.trans.position.x - 0.5f && Camera.main.ScreenToWorldPoint(Input.mousePosition).y <= trash.trans.position.y + 0.5f && Camera.main.ScreenToWorldPoint(Input.mousePosition).y >= trash.trans.position.y - 0.5f)
+            {
+                if (cardsToDiscard > 0)
+                {
+                    cardsToDiscard--;
+                    dmPV.RPC("discardCard", RpcTarget.All, cardHover.cardCurrent);
+                    removeCard(cardHover.cardNumber);
+                }
+            }
         }
         if (cardSelected == false) // detects if a card has already been selected
         {

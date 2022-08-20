@@ -41,6 +41,8 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
     public SpriteRenderer JAcg;
     public SpriteRenderer timer;
     public SpriteRenderer symbolSR;
+    public SpriteRenderer jMarker;
+    public SpriteRenderer plus2;
     public PhotonView pv;
     public GameManager Game;
     #endregion
@@ -329,6 +331,8 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
             JAsr.enabled = false;
             JApm.enabled = false;
             symbolSR.enabled = false;
+            jMarker.enabled = false;
+            plus2.enabled = false;
         } else
         {
             if ((cardCurrent.Substring(0, 1) == "J" || cardCurrent.Remove (0, 1) == "1") && lastPlayer != -1) //if a card is a played joker or ace, find the next card and put the J/A on top
@@ -400,10 +404,16 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
                 JApm.enabled = false;
                 JAsr.enabled = false;
             }
+            plus2.enabled = false;
             if (cardCurrent.Substring(0, 1) == "J" && countStack() > 1)
             {
                 symbolSR.enabled = true;
                 symbolSR.sprite = symbolSprites[1];
+                jMarker.enabled = true;
+                jMarker.sprite = playerMarkerSprites[jTarget];
+            } else
+            {
+                jMarker.enabled = false;
             }
             if (countStack() < 3 && !(cardCurrent.Substring(0, 1) == "J" && countStack() > 1))
             {
@@ -412,6 +422,10 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
             {
                 symbolSR.enabled = true;
                 symbolSR.sprite = symbolSprites[2];
+                if (cardStack[1].Substring(0, 1) == "J")
+                {
+                    plus2.enabled = true;
+                }
             } else if (countStack() > 3)
             {
                 symbolSR.enabled = true;
@@ -438,6 +452,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
             stream.SendNext(timerStage);
             stream.SendNext(timerActive);
             stream.SendNext(timerTime);
+            stream.SendNext(jTarget);
         } else //if client is not owner of cards, recieves cards from server and updates the sprite
         {
             for (int i = 0; i < 8; i++)
@@ -448,6 +463,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
             timerStage = (int)stream.ReceiveNext();
             timerActive = (bool)stream.ReceiveNext();
             timerTime = (float)stream.ReceiveNext();
+            jTarget = (int)stream.ReceiveNext();
             updateSprite();
         }
     }

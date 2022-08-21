@@ -49,6 +49,9 @@ MonoBehaviour:
   - returnJAResult
   - takeJA
   - discardCard
+  - returnHammerResult
+  - takeHammer
+  - hammerExpire
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

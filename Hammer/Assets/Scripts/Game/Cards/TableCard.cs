@@ -109,6 +109,10 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
         { //checks if player clicked on a table J/A
             pv.RPC("takeJA", RpcTarget.All, um.selfPlayerNumber);
         }
+        if (countStack() > 3 && cardPlayers[countStack() - 2] == um.selfPlayerNumber && Input.GetKeyDown(KeyCode.Mouse0) && isMouseOnCard())
+        {
+            pv.RPC("takeHammer", RpcTarget.All, um.selfPlayerNumber);
+        }
         if (timerActive && !Game.IsPaused) //checks if this card has an active timer
         {
             timerTime += Time.deltaTime;
@@ -162,6 +166,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
 
     public void onTimerExpire()
     {
+        updateSprite();
         if (symbolSR.sprite == symbolSprites[2] && pv.IsMine)
         {
             bool cont = false;
@@ -188,7 +193,13 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
         {
             pv.RPC("drawPenaltyCards", RpcTarget.All, jTarget, 2);
         }
-        discard.discardCard(cardCurrent);
+        if (symbolSR.sprite == symbolSprites[0] && pv.IsMine)
+        {
+            pv.RPC("hammerExpire", RpcTarget.All, cardPlayers[countStack() - 2], cardStack);
+        } else
+        {
+            discard.discardCard(cardCurrent);
+        }
         if (timerCooldown > 1f)
         {
            drawCard(); 
@@ -266,14 +277,34 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
         if (pv.IsMine)
         {
             string JANumber = "";
-            bool cardPlayedSuccessfully = false;
+            bool cardTakenSuccessfully = false;
             if (cardStack[1] == "none" && (cardCurrent.Substring(0, 1) == "J" || cardCurrent.Remove (0, 1) == "1"))
             {
                 drawCard();
-                cardPlayedSuccessfully = true;
+                cardTakenSuccessfully = true;
                 JANumber = cardCurrent;
             }
-            pv.RPC("returnJAResult", RpcTarget.All, cardPlayedSuccessfully, Number, JANumber);
+            pv.RPC("returnJAResult", RpcTarget.All, cardTakenSuccessfully, Number, JANumber);
+        }
+    }
+
+    [PunRPC]
+    public void takeHammer(int Number)
+    {
+        if (pv.IsMine)
+        {
+            bool cardTakenSuccessfully = false;
+            string[] Cards = new string[8];
+            if (countStack() > 3 && cardPlayers[countStack() - 2] == Number)
+            {
+                for (int i = 0; i < cardStack.Length; i++)
+                {
+                    Cards[i] = cardStack[i];
+                }
+                drawCard();
+                cardTakenSuccessfully = true;
+            }
+            pv.RPC("returnHammerResult", RpcTarget.All, cardTakenSuccessfully, Number, Cards);
         }
     }
 
@@ -300,12 +331,42 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
     }
 
     [PunRPC]
+    public void hammerExpire(int Number, string[] Cards)
+    {
+        if (um.selfPlayerNumber == Number)
+        {
+            for (int i = 0; i < Cards.Length; i++)
+            {
+                if (Cards[i] != "none")
+                {
+                    hm.addCardToHand(Cards[i]);
+                }
+            }
+        }
+    }
+
+    [PunRPC]
     public void returnJAResult(bool Success, int Number, string JANumber)
     {
         if (um.selfPlayerNumber == Number && Success)
         {
             hm.addCardToHand(JANumber);
             hm.cardsToDiscard++;
+        }
+    }
+
+    [PunRPC]
+    public void returnHammerResult(bool Success, int Number, string[] Cards)
+    {
+        if (um.selfPlayerNumber == Number && Success)
+        {
+            for (int i = 0; i < Cards.Length; i++)
+            {
+                if (Cards[i] != "none")
+                {
+                    hm.addCardToHand(Cards[i]);
+                }
+            }
         }
     }
 
@@ -344,6 +405,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
         }
         jTarget = -1;
         cardStack[0] = dm.drawCard();
+        timerActive = false;
     }
 
     public bool isMouseOnCard()
@@ -463,6 +525,8 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
             {
                 symbolSR.enabled = true;
                 symbolSR.sprite = symbolSprites[0];
+                targetMarker.enabled = true;
+                targetMarker.sprite = playerMarkerSprites[cardPlayers[countStack() - 2]];
             }
         }
         timer.enabled = timerActive;

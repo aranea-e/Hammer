@@ -8,12 +8,15 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
     #region vars
     public string cardCurrent;
     public string[] cardStack;
+    public List<string> hammerCards;
+    public List<int> hammerPlayers;
     public int[] cardPlayers;
     public int cardNumber;
     public int secondCard;
     public int jTarget;
     public Vector2 cardLocation;
     public Sprite sprite;
+    public Sprite hammerSprite;
     public Sprite[] sprites;
     public Sprite[] playerMarkerSprites;
     public Sprite[] timerSprites;
@@ -77,7 +80,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
     public void Update()
     {
         um = Object.FindObjectOfType<UserManager>(); //finds any user manager to get own player number
-        if (hm.cardHover != null && !hm.jSelected)
+        if (hm.cardHover != null  && hm.cardHover.cardCurrent != "none" && !hm.jSelected)
         {
             if (lastPlayer != -1 && (cardCurrent.Substring(0, 1) == "J" || cardCurrent.Remove (0, 1) == "1"))
             { //checks whether the top card is a J/A
@@ -85,7 +88,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
                 JAcg.enabled = canPlayCard(hm.cardHover.cardCurrent, um.selfPlayerNumber); ////glows if a card can be played, does not glow if a card cannot be played
             } else
             {
-                cardGlow.enabled = canPlayCard(hm.cardHover.cardCurrent, um.selfPlayerNumber); //glows if a card can be played, does not glow if a card cannot be played
+                cardGlow.enabled = (canPlayCard(hm.cardHover.cardCurrent, um.selfPlayerNumber) || (countStack() > 3 && lastPlayer != um.selfPlayerNumber && cardPlayers[countStack() - 2] != um.selfPlayerNumber && !hammerPlayers.Contains(um.selfPlayerNumber))); //glows if a card can be played, does not glow if a card cannot be played
                 JAcg.enabled = false;
             }
         } else
@@ -109,10 +112,18 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
         { //checks if player clicked on a table J/A
             pv.RPC("takeJA", RpcTarget.All, um.selfPlayerNumber);
         }
-        if (countStack() > 3 && cardPlayers[countStack() - 2] == um.selfPlayerNumber && Input.GetKeyDown(KeyCode.Mouse0) && isMouseOnCard())
-        {
-            pv.RPC("takeHammer", RpcTarget.All, um.selfPlayerNumber);
+        if (countStack() > 3 && Input.GetKeyDown(KeyCode.Mouse0) && isMouseOnCard())
+        { //checks if player clicked on a hammer
+            if (cardPlayers[countStack() - 2] == um.selfPlayerNumber )
+            { //checks if it was targeting the person who clicked
+                pv.RPC("takeHammer", RpcTarget.All, um.selfPlayerNumber);
+            } else if (lastPlayer != um.selfPlayerNumber && hm.cardSelected)
+            { //checks if it was not played by this player and a card is selected
+                pv.RPC("playOnHammer", RpcTarget.All, hm.cardHover.cardCurrent, hm.cardHover.cardNumber, um.selfPlayerNumber);
+            }
+            
         }
+
         if (timerActive && !Game.IsPaused) //checks if this card has an active timer
         {
             timerTime += Time.deltaTime;
@@ -210,7 +221,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
 
     public bool canPlayCard(string CardToPlay, int Number)
     {
-        if (Number == lastPlayer || cardCurrent == "none" || Game.IsPaused || (lastPlayer == -1 && (cardCurrent.Substring(0, 1) == "J" || cardCurrent.Remove (0, 1) == "1")))
+        if (hammerCards.Count != 0 || Number == lastPlayer || cardCurrent == "none" || Game.IsPaused || (lastPlayer == -1 && (cardCurrent.Substring(0, 1) == "J" || cardCurrent.Remove (0, 1) == "1")))
         {
             isPlayable = false;
         } else if (lastPlayer == -1 && (CardToPlay.Substring(0, 1) == "J" || CardToPlay.Remove (0, 1) == "1"))
@@ -305,6 +316,23 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
                 cardTakenSuccessfully = true;
             }
             pv.RPC("returnHammerResult", RpcTarget.All, cardTakenSuccessfully, Number, Cards);
+        }
+    }
+
+    [PunRPC]
+    public void playOnHammer(string Card, int CardObjectNumber, int Number)
+    {
+        if (pv.IsMine)
+        {
+            bool cardPlayedSuccessfully = false;
+            if (countStack() > 3 && Number != lastPlayer && Number != cardPlayers[countStack() - 2] && !hammerPlayers.Contains(Number))
+            {
+                hammerCards.Add(Card);
+                hammerPlayers.Add(Number);
+                updateCurrentCard();
+                cardPlayedSuccessfully = true;
+            } 
+            pv.RPC("returnCardResult", RpcTarget.All, cardPlayedSuccessfully, CardObjectNumber, Number);
         }
     }
 
@@ -524,7 +552,13 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
             } else if (countStack() > 3)
             {
                 symbolSR.enabled = true;
-                symbolSR.sprite = symbolSprites[0];
+                if (hammerCards.Count == 0)
+                {
+                    symbolSR.sprite = symbolSprites[0];
+                } else
+                {
+                    symbolSR.sprite = hammerSprite;
+                }
                 targetMarker.enabled = true;
                 targetMarker.sprite = playerMarkerSprites[cardPlayers[countStack() - 2]];
             }
@@ -546,16 +580,31 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
                 stream.SendNext(cardStack[i]);
                 stream.SendNext(cardPlayers[i]);
             }
+            stream.SendNext(hammerCards.Count);
+            for (int i = 0; i < hammerCards.Count; i++)
+            {
+                stream.SendNext(hammerCards[i]);
+                stream.SendNext(hammerPlayers[i]);
+            }
             stream.SendNext(timerStage);
             stream.SendNext(timerActive);
             stream.SendNext(timerTime);
             stream.SendNext(jTarget);
         } else //if client is not owner of cards, recieves cards from server and updates the sprite
         {
+            hammerCards.Clear();
+            hammerPlayers.Clear();
             for (int i = 0; i < 8; i++)
             {
                 cardStack[i] = (string)stream.ReceiveNext();
                 cardPlayers[i] = (int)stream.ReceiveNext();
+                
+            }
+            int HammerLength = (int)stream.ReceiveNext();
+            for (int i = 0; i < HammerLength; i++)
+            {
+                hammerCards.Add((string)stream.ReceiveNext());
+                hammerPlayers.Add((int)stream.ReceiveNext());
             }
             timerStage = (int)stream.ReceiveNext();
             timerActive = (bool)stream.ReceiveNext();

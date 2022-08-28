@@ -367,12 +367,15 @@ MonoBehaviour:
   - none
   - none
   - none
+  hammerCards: []
+  hammerPlayers: 
   cardPlayers: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
   cardNumber: 0
   secondCard: 0
   jTarget: 0
   cardLocation: {x: 0, y: 0}
   sprite: {fileID: 0}
+  hammerSprite: {fileID: 21300000, guid: b9a5fb16fa76f75469d1bc6328b3f03d, type: 3}
   sprites: []
   playerMarkerSprites: []
   timerSprites: []

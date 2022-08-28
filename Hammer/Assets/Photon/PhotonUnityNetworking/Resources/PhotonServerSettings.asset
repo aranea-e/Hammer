@@ -52,6 +52,7 @@ MonoBehaviour:
   - returnHammerResult
   - takeHammer
   - hammerExpire
+  - playOnHammer
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

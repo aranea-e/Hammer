@@ -446,6 +446,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
         }
         jTarget = -1;
         cardStack[0] = dm.drawCard();
+        hammerCards.Clear();
         timerActive = false;
     }
 

@@ -129,7 +129,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
             timerTime += Time.deltaTime;
             if (timerTime >= 1f) //sees if 1 second has passed since the last time stage
             {
-                timerTime = timerTime % 1f;
+                timerTime -= 1f;
                 advanceTimer(); //advances the timer
             }
         }

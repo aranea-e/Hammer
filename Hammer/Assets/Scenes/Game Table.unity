@@ -910,6 +910,20 @@ MonoBehaviour:
   - {x: -0.75, y: -2.34375}
   - {x: 0.75, y: -2.34375}
   - {x: 2.25, y: -2.34375}
+  Cards:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  Game: {fileID: 392414620}
 --- !u!4 &392414619
 Transform:
   m_ObjectHideFlags: 0
@@ -938,6 +952,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsPaused: 0
+  spawner: {fileID: 392414618}
+  hm: {fileID: 1973103731}
+  dm: {fileID: 0}
+  tableCards: []
+  handCards: []
 --- !u!1 &405098902
 GameObject:
   m_ObjectHideFlags: 0

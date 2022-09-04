@@ -48,15 +48,17 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
     public SpriteRenderer plus2;
     public PhotonView pv;
     public GameManager Game;
+    public CardTimer ct;
     #endregion
 
-    void Start()
+    public void Start()
     {
         dm = Object.FindObjectOfType<DeckManager>(); //sets references
         hm = Object.FindObjectOfType<HandManager>();
         Game = Object.FindObjectOfType<GameManager>();
         Spawn = Object.FindObjectOfType<Spawn>();
         discard = Object.FindObjectOfType<Discard>();
+        ct = Object.FindObjectOfType<CardTimer>();
         bool cont = false;
         cardLocation.x = trans.position.x; //takes Vector2 cardLocation to determine which number card this is
         cardLocation.y = trans.position.y;
@@ -368,6 +370,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
         {
             hm.removeCard(CardObjectNumber);
             hm.jSelected = false;
+            ct.timerTime = 0f;
         }
     }
 

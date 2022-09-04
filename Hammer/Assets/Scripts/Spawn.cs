@@ -9,7 +9,10 @@ public class Spawn : MonoBehaviour
     public GameObject cardPrefab;
     public GameObject userPrefab;
     public Vector2[] cardLocations;
-    void Awake() //uses Awake to make sure references get assigned properly in Start functions
+
+    public GameManager Game;
+
+    public void SpawnStart() //uses Awake to make sure references get assigned properly in Start functions
     {
         if (PhotonNetwork.IsMasterClient)
         {    

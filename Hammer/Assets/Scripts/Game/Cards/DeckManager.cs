@@ -24,15 +24,19 @@ public class DeckManager : MonoBehaviourPunCallbacks, IPunObservable
     public Discard discard;
     #endregion
 
-    void Awake()
+    void Start()
     {
         hm = Object.FindObjectOfType<HandManager>();
         hm.dm = this;
         hm.dmPV = pv;
         Game = Object.FindObjectOfType<GameManager>();
         discard = Object.FindObjectOfType<Discard>();
+        um = Object.FindObjectOfType<UserManager>();
         ResetDeck();
         Shuffle();
+        Game.dm = this;
+        Game.tableCards = cardObjects;
+        hm.HMStart();
     }
 
     void Update()

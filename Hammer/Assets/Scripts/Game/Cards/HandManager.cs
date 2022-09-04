@@ -26,11 +26,15 @@ public class HandManager : MonoBehaviour
     public TableCard[] tcs;
     public Trash trash;
 
-    void Start()
+    public void HMStart()
     {
         for (int i = 0; i < 21; i++)
         {
             cardObjects[i].cardNumber = i;
+        }
+        for (int i = 0; i < 5; i++)
+        {
+            drawCard();
         }
     }
 

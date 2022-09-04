@@ -204,9 +204,18 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
         {
             pv.RPC("drawPenaltyCards", RpcTarget.All, jTarget, 2);
         }
-        if (symbolSR.sprite == symbolSprites[0] && pv.IsMine)
+        if ((symbolSR.sprite == symbolSprites[0] || symbolSR.sprite == hammerSprite) && pv.IsMine)
         {
-            pv.RPC("hammerExpire", RpcTarget.All, cardPlayers[countStack() - 2], cardStack);
+            string[] Cards = new string[8 + hammerCards.Count];
+            for (int i = 0; i < 8; i++)
+            {
+                Cards[i] = cardStack[i];
+            }
+            for (int i = 0; i < hammerCards.Count; i++)
+            {
+                Cards[i + 8] = hammerCards[i];
+            }
+            pv.RPC("hammerExpire", RpcTarget.All, cardPlayers[countStack() - 2], Cards);
         } else
         {
             discard.discardCard(cardCurrent);
@@ -305,12 +314,16 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
         if (pv.IsMine)
         {
             bool cardTakenSuccessfully = false;
-            string[] Cards = new string[8];
+            string[] Cards = new string[8 + hammerCards.Count];
             if (countStack() > 3 && cardPlayers[countStack() - 2] == Number)
             {
-                for (int i = 0; i < cardStack.Length; i++)
+                for (int i = 0; i < 8; i++)
                 {
                     Cards[i] = cardStack[i];
+                }
+                for (int i = 0; i < hammerCards.Count; i++)
+                {
+                    Cards[i + 8] = hammerCards[i];
                 }
                 drawCard();
                 cardTakenSuccessfully = true;

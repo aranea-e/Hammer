@@ -156,6 +156,7 @@ MonoBehaviour:
   timerTime: 0
   timeToDraw: 10
   sr: {fileID: 41810906}
+  cardSR: {fileID: 509057301}
   sprites:
   - {fileID: 1381172705, guid: 5b959ab07b166504892527e1199ef619, type: 3}
   - {fileID: 941779777, guid: 5b959ab07b166504892527e1199ef619, type: 3}
@@ -941,6 +942,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsPaused: 0
+  isUserPlaying: 0
   playerNumberList: 
   selfPlayerNumber: 0
   spawner: {fileID: 392414618}
@@ -3203,6 +3205,7 @@ MonoBehaviour:
   hm: {fileID: 1973103731}
   textmesh: {fileID: 1962595311}
   glow: {fileID: 1536894584}
+  trash: {fileID: 1520176674}
   trans: {fileID: 1520176675}
   Game: {fileID: 392414620}
 --- !u!1 &1536894582

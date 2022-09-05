@@ -6,6 +6,7 @@ using Photon.Pun;
 public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
 {
     public bool IsPaused;
+    public bool isUserPlaying;
 
     public Photon.Realtime.Player[] playerList;
     public int[] playerNumberList;
@@ -23,6 +24,18 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
         spawner.SpawnStart();
         UpdatePlayerList();
     }
+
+    void Update()
+    {
+        UserManager[] UMS = Object.FindObjectsOfType<UserManager>();
+        foreach (UserManager UM in UMS)
+        {
+            if (UM.playerNumber == selfPlayerNumber)
+            {
+                isUserPlaying = UM.IsPlaying;
+            }
+        }
+    }   
 
     [ContextMenu("Update Player List")]
     public void UpdatePlayerList()

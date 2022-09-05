@@ -9,6 +9,7 @@ public class CardTimer : MonoBehaviour
     public float timeToDraw;
 
     public SpriteRenderer sr;
+    public SpriteRenderer cardSR;
     public Sprite[] sprites;
     public GameManager Game;
     public HandManager hm;
@@ -16,7 +17,7 @@ public class CardTimer : MonoBehaviour
 
     void Update()
     {
-        if (!Game.IsPaused)
+        if (!Game.IsPaused && Game.isUserPlaying)
         {
             timerTime += Time.deltaTime; //adds time since last frame
             if (Camera.main.ScreenToWorldPoint(Input.mousePosition).x <= trans.position.x + 0.5f && Camera.main.ScreenToWorldPoint(Input.mousePosition).x >= trans.position.x - 0.5f && Camera.main.ScreenToWorldPoint(Input.mousePosition).y <= trans.position.y + 0.75f && Camera.main.ScreenToWorldPoint(Input.mousePosition).y >= trans.position.y - 0.75f && Input.GetKeyDown(KeyCode.Mouse0))
@@ -32,6 +33,12 @@ public class CardTimer : MonoBehaviour
                 hm.drawCard();
             }
             sr.sprite = sprites[(int)Math.Floor((timerTime / timeToDraw) * 9)]; //displays most accurate clock sprite
+            
+        } else
+        {
+            timerTime = 0f;
         }
+        sr.enabled = Game.isUserPlaying;
+        cardSR.enabled = Game.isUserPlaying;
     }
 }

@@ -76,10 +76,6 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
         playerMarkerSprites = Resources.LoadAll<Sprite>("Sprites/PlayerMarkers");
         timerSprites = Resources.LoadAll<Sprite>("Sprites/Clock");
         symbolSprites = Resources.LoadAll<Sprite>("Sprites/Card Interactions");
-        if (cardNumber == 11)
-        {
-            dm.drawTable(); //if this is the final card, tells the DM to draw a table full of cards
-        }
     }
 
     public void Update()
@@ -94,7 +90,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
                 JAcg.enabled = canPlayCard(hm.cardHover.cardCurrent, Game.selfPlayerNumber); //glows if a card can be played, does not glow if a card cannot be played
             } else
             {
-                cardGlow.enabled = (!Game.IsPaused && (canPlayCard(hm.cardHover.cardCurrent, Game.selfPlayerNumber) || (countStack() > 3 && lastPlayer != Game.selfPlayerNumber && cardPlayers[countStack() - 2] != Game.selfPlayerNumber && !hammerPlayers.Contains(Game.selfPlayerNumber)))); //glows if a card can be played, does not glow if a card cannot be played
+                cardGlow.enabled = (!Game.IsPaused && Game.isUserPlaying && (canPlayCard(hm.cardHover.cardCurrent, Game.selfPlayerNumber) || (countStack() > 3 && lastPlayer != Game.selfPlayerNumber && cardPlayers[countStack() - 2] != Game.selfPlayerNumber && !hammerPlayers.Contains(Game.selfPlayerNumber)))); //glows if a card can be played, does not glow if a card cannot be played
                 JAcg.enabled = false;
             }
         } else
@@ -116,11 +112,11 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
                 pv.RPC("playCard", RpcTarget.All, hm.cardHover.cardCurrent, hm.cardHover.cardNumber, Game.selfPlayerNumber, -1); //calls playCard rpc
             }
         }
-        if (!Game.IsPaused && cardStack[1] == "none" && (cardCurrent.Substring(0, 1) == "J" || cardCurrent.Remove (0, 1) == "1") && Input.GetKeyDown(KeyCode.Mouse0) && isMouseOnCard())
+        if (!Game.IsPaused && Game.isUserPlaying && cardStack[1] == "none" && (cardCurrent.Substring(0, 1) == "J" || cardCurrent.Remove (0, 1) == "1") && Input.GetKeyDown(KeyCode.Mouse0) && isMouseOnCard())
         { //checks if player clicked on a table J/A
             pv.RPC("takeJA", RpcTarget.All, Game.selfPlayerNumber);
         }
-        if (countStack() > 3 && Input.GetKeyDown(KeyCode.Mouse0) && isMouseOnCard() && !Game.IsPaused)
+        if (countStack() > 3 && Input.GetKeyDown(KeyCode.Mouse0) && isMouseOnCard() && !Game.IsPaused && Game.isUserPlaying)
         { //checks if player clicked on a hammer
             if (cardPlayers[countStack() - 2] == Game.selfPlayerNumber )
             { //checks if it was targeting the person who clicked
@@ -247,7 +243,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
 
     public bool canPlayCard(string CardToPlay, int Number)
     {
-        if (hammerCards.Count != 0 || Number == lastPlayer || cardCurrent == "none" || Game.IsPaused || (lastPlayer == -1 && (cardCurrent.Substring(0, 1) == "J" || cardCurrent.Remove (0, 1) == "1")))
+        if (hammerCards.Count != 0 || Number == lastPlayer || cardCurrent == "none" || Game.IsPaused || !Game.isUserPlaying || (lastPlayer == -1 && (cardCurrent.Substring(0, 1) == "J" || cardCurrent.Remove (0, 1) == "1")))
         {
             isPlayable = false;
         } else if (lastPlayer == -1 && (CardToPlay.Substring(0, 1) == "J" || CardToPlay.Remove (0, 1) == "1"))

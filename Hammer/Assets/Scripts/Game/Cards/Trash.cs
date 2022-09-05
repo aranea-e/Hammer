@@ -8,13 +8,16 @@ public class Trash : MonoBehaviour
     public HandManager hm;
     public TextMeshProUGUI textmesh;
     public SpriteRenderer glow;
+    public SpriteRenderer trash;
     public Transform trans;
     public GameManager Game;
 
     void Update()
     {
         textmesh.text = hm.cardsToDiscard.ToString(); //displays number of cards user can discard
-        glow.enabled = (!Game.IsPaused && hm.cardHover != null && hm.cardHover.cardCurrent != "none" && hm.cardsToDiscard > 0);
+        glow.enabled = (!Game.IsPaused && Game.isUserPlaying && hm.cardHover != null && hm.cardHover.cardCurrent != "none" && hm.cardsToDiscard > 0);
         //glows if user can discard a card
+        trash.enabled = Game.isUserPlaying;
+        textmesh.enabled = Game.isUserPlaying;
     }
 }

@@ -36,14 +36,17 @@ public class HandManager : MonoBehaviour
         {
             cardObjects[i].cardNumber = i; //sets references for card objects
         }
-        for (int i = 0; i < 7; i++)
-        {
-            drawCard(); //draws 7 cards
-        }
     }
 
     void Update()
     {
+        if (!Game.isUserPlaying)
+        {
+            for (int i = 0; i < cards.Length; i++)
+            {
+                cards[i] = "none";
+            }
+        }
         if (Input.GetKeyDown(KeyCode.Mouse0) && cardHover != null && cardHover.cardCurrent != "none")
         { //if the user clicks while a card is selected
         #region card deselect
@@ -66,7 +69,7 @@ public class HandManager : MonoBehaviour
         #endregion
         
         #region discard
-            if (!Game.IsPaused && Camera.main.ScreenToWorldPoint(Input.mousePosition).x <= trash.trans.position.x + 0.5f && Camera.main.ScreenToWorldPoint(Input.mousePosition).x >= trash.trans.position.x - 0.5f && Camera.main.ScreenToWorldPoint(Input.mousePosition).y <= trash.trans.position.y + 0.5f && Camera.main.ScreenToWorldPoint(Input.mousePosition).y >= trash.trans.position.y - 0.5f)
+            if (!Game.IsPaused && Game.isUserPlaying && Camera.main.ScreenToWorldPoint(Input.mousePosition).x <= trash.trans.position.x + 0.5f && Camera.main.ScreenToWorldPoint(Input.mousePosition).x >= trash.trans.position.x - 0.5f && Camera.main.ScreenToWorldPoint(Input.mousePosition).y <= trash.trans.position.y + 0.5f && Camera.main.ScreenToWorldPoint(Input.mousePosition).y >= trash.trans.position.y - 0.5f)
             { //checks if user clicked on trash while game is unpaused
                 if (cardsToDiscard > 0)
                 {
@@ -133,7 +136,7 @@ public class HandManager : MonoBehaviour
         {
             foreach (UserManager UM in ums)
             { //goes through each Usermanager
-                if (!UM.pv.IsMine)
+                if (!UM.pv.IsMine && UM.IsPlaying)
                 {
                     UM.cardGlow.enabled = true; //turns on the glow while a joker is selected
                     Vector2 POS;
@@ -148,7 +151,7 @@ public class HandManager : MonoBehaviour
         { //disables glow on each UserManager
             foreach (UserManager UM in ums)
             {
-                if (!UM.pv.IsMine && !Game.IsPaused)
+                if (!UM.pv.IsMine && !Game.IsPaused && Game.isUserPlaying)
                 {
                     UM.cardGlow.enabled = false;
                 }

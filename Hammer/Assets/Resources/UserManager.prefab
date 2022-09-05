@@ -604,7 +604,7 @@ MonoBehaviour:
   - {x: 0, y: 0}
   sprites: []
   sprite: {fileID: 0}
-  IsPlaying: 0
+  IsPlaying: 1
   playerActorNumber: 0
   playerNumber: 0
   pv: {fileID: 8716282444465609997}
@@ -613,10 +613,13 @@ MonoBehaviour:
   canvasRT: {fileID: 1482058489650504974}
   cardsUI: {fileID: 1246490606178570756}
   usernameUI: {fileID: 3282739237571945739}
+  cardUI: {fileID: 5449945134327368616}
   symbolUI: {fileID: 717546455635792179}
   cardGlow: {fileID: 4866544828666895306}
   canvas: {fileID: 6515536329597364160}
   Game: {fileID: 0}
+  cardSprite: {fileID: -691174200, guid: 1a8a655e30497034895add0ff8e64da4, type: 3}
+  graySprite: {fileID: 21300000, guid: f06e44b3d8509784f8c051b574becbc0, type: 3}
 --- !u!114 &8716282444465609997
 MonoBehaviour:
   m_ObjectHideFlags: 0

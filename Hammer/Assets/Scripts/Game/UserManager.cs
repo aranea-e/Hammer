@@ -27,10 +27,13 @@ public class UserManager : MonoBehaviourPunCallbacks, IPunObservable
     public RectTransform canvasRT;
     public TextMeshProUGUI cardsUI;
     public TextMeshProUGUI usernameUI;
+    public Image cardUI;
     public Image symbolUI;
     public Image cardGlow;
     public Canvas canvas;
     public GameManager Game;
+    public Sprite cardSprite;
+    public Sprite graySprite;
     #endregion
 
     public void Start()
@@ -54,31 +57,42 @@ public class UserManager : MonoBehaviourPunCallbacks, IPunObservable
         } else
         { //displays player info
             canvas.enabled = true;
+            usernameUI.text = username; //displays username
             if (playerNumber > Game.selfPlayerNumber)
             { //moves to appropriate location
-                pos = posList[playerNumber - 1];
+            pos = posList[playerNumber - 1];
             } else
             {
                 pos = posList[playerNumber];
             }
             rt.anchoredPosition = pos;
-            usernameUI.text = username; //displays username
-            cardsUI.text = cards.ToString(); //displays number of cards
-            for (int i = 0; i < sprites.Length; i++)
+            if (IsPlaying)
             {
-                if ("PlayerMarkers_" + symbolNumber.ToString() == sprites[i].name)
-                { //displays player marker sprite
-                    sprite = sprites[i];
+                cardsUI.text = cards.ToString(); //displays number of cards
+                cardsUI.enabled = true;
+                for (int i = 0; i < sprites.Length; i++)
+                {
+                    if ("PlayerMarkers_" + symbolNumber.ToString() == sprites[i].name)
+                    { //displays player marker sprite
+                        sprite = sprites[i];
+                    }
                 }
+                symbolUI.sprite = sprite;
+                symbolUI.enabled = true;
+                cardUI.sprite = cardSprite;
+            } else 
+            {
+                cardsUI.enabled = false;
+                symbolUI.enabled = false;
+                cardUI.sprite = graySprite;
             }
-            symbolUI.sprite = sprite;
         }
     }
 
     public void updateUser()
     {
         Game = Object.FindObjectOfType<GameManager>();
-        for (int i = 0; i < 25; i++)
+        for (int i = 0; i < Game.playerNumberList.Length; i++)
         {
             if (playerActorNumber == Game.playerNumberList[i])
             {

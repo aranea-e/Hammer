@@ -16,5 +16,6 @@ public class PlayerMarker : MonoBehaviour
     void Update()
     {
         sr.sprite = sprites[Game.selfPlayerNumber]; //sets sprite in corner to own player marker
+        sr.enabled = Game.isUserPlaying;
     }
 }

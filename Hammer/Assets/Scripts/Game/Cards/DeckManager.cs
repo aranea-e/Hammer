@@ -38,7 +38,6 @@ public class DeckManager : MonoBehaviourPunCallbacks, IPunObservable
         {
             ResetDeck(); //resets and shuffles deck
             Shuffle();
-            drawTable(); //fills table
         }
         hm.HMStart(); //calls HandManager start function
     }

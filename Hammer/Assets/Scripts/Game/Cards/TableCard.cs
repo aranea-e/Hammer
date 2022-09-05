@@ -76,7 +76,10 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
         playerMarkerSprites = Resources.LoadAll<Sprite>("Sprites/PlayerMarkers");
         timerSprites = Resources.LoadAll<Sprite>("Sprites/Clock");
         symbolSprites = Resources.LoadAll<Sprite>("Sprites/Card Interactions");
-        
+        if (cardNumber == 11)
+        {
+            dm.drawTable();
+        }
     }
 
     public void Update()

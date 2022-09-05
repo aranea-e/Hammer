@@ -78,19 +78,20 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
         symbolSprites = Resources.LoadAll<Sprite>("Sprites/Card Interactions");
         if (cardNumber == 11)
         {
-            dm.drawTable();
+            dm.drawTable(); //if this is the final card, tells the DM to draw a table full of cards
         }
     }
 
     public void Update()
     {
         um = Object.FindObjectOfType<UserManager>(); //finds any user manager to get own player number
+        #region card glow
         if (hm.cardHover != null  && hm.cardHover.cardCurrent != "none" && !hm.jSelected)
-        {
+        { //checks if a card is selected 
             if (lastPlayer != -1 && (cardCurrent.Substring(0, 1) == "J" || cardCurrent.Remove (0, 1) == "1"))
             { //checks whether the top card is a J/A
                 cardGlow.enabled = false;
-                JAcg.enabled = canPlayCard(hm.cardHover.cardCurrent, um.selfPlayerNumber); ////glows if a card can be played, does not glow if a card cannot be played
+                JAcg.enabled = canPlayCard(hm.cardHover.cardCurrent, um.selfPlayerNumber); //glows if a card can be played, does not glow if a card cannot be played
             } else
             {
                 cardGlow.enabled = (!Game.IsPaused && (canPlayCard(hm.cardHover.cardCurrent, um.selfPlayerNumber) || (countStack() > 3 && lastPlayer != um.selfPlayerNumber && cardPlayers[countStack() - 2] != um.selfPlayerNumber && !hammerPlayers.Contains(um.selfPlayerNumber)))); //glows if a card can be played, does not glow if a card cannot be played
@@ -101,7 +102,9 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
             cardGlow.enabled = false;
             JAcg.enabled = false;
         }
+        #endregion
         
+        #region play or take cards
         if (hm.cardHover != null && canPlayCard(hm.cardHover.cardCurrent, um.selfPlayerNumber) && Input.GetKeyDown(KeyCode.Mouse0) && isMouseOnCard())
         { //checks if a card can be played and the player clicked on this card
             if (hm.cardHover.cardCurrent.Substring(0, 1) == "J") //checks if a joker was played
@@ -128,7 +131,9 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
             }
             
         }
+        #endregion
 
+        #region timer
         if (timerActive && !Game.IsPaused) //checks if this card has an active timer
         {
             timerTime += Time.deltaTime;
@@ -142,6 +147,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
         {
             timerCooldown += Time.deltaTime;
         }
+        #endregion
         updateSprite();
     }
 
@@ -169,14 +175,16 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
         return cardCount;
     }
 
+    #region timer
+
     public void advanceTimer()
     {
-        timerStage++;
+        timerStage++; //advances timer 1 stage
         if (timerStage > 8)
-        {
-            timerStage = 0;
+        { //if timer expires
+            timerStage = 0; //resets timer
             timerActive = false;
-            onTimerExpire();
+            onTimerExpire(); //calls method for timer expiration
         }
     }
 
@@ -184,7 +192,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
     {
         updateSprite();
         if (symbolSR.sprite == symbolSprites[2] && pv.IsMine)
-        {
+        { //checks if the card was a "hit"
             bool cont = false;
             for (int i = 0; i < 8 && !cont; i++)
             {
@@ -198,40 +206,44 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
                 }
             }
             if (cardStack[1].Substring(0, 1) == "J")
-            {
+            { //gives 5 penalty cards if the "hit" was on a "tap"
                 pv.RPC("drawPenaltyCards", RpcTarget.All, cardPlayers[secondCard], 5);
             } else
-            {
+            { //gives 3 penalty cards otherwise
                 pv.RPC("drawPenaltyCards", RpcTarget.All, cardPlayers[secondCard], 3);
             }
         }
         if (symbolSR.sprite == symbolSprites[1] && pv.IsMine)
-        {
+        { //gives penalty cards to joker target
             pv.RPC("drawPenaltyCards", RpcTarget.All, jTarget, 2);
         }
         if ((symbolSR.sprite == symbolSprites[0] || symbolSR.sprite == hammerSprite) && pv.IsMine)
-        {
+        { //gives penalty cards to hammer target
             string[] Cards = new string[8 + hammerCards.Count];
             for (int i = 0; i < 8; i++)
-            {
+            { //adds cards from stack to Cards
                 Cards[i] = cardStack[i];
             }
             for (int i = 0; i < hammerCards.Count; i++)
-            {
+            { //adds extra cards from hammer to Cards
                 Cards[i + 8] = hammerCards[i];
             }
-            pv.RPC("hammerExpire", RpcTarget.All, cardPlayers[countStack() - 2], Cards);
+            pv.RPC("hammerExpire", RpcTarget.All, cardPlayers[countStack() - 2], Cards); //calls hammerExpire RPC to give penalty cards
         } else
         {
-            discard.discardCard(cardCurrent);
+            discard.discardCard(cardCurrent); //discards card
         }
         if (timerCooldown > 1f)
         {
-           drawCard(); 
+           drawCard(); //replaces card if not on cooldown to prevent clients from drawing too many
            timerCooldown = 0f;
         }
         updateSprite();
     }
+
+    #endregion
+
+    #region playing and taking cards
 
     public bool canPlayCard(string CardToPlay, int Number)
     {
@@ -274,7 +286,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
         {
             bool cardPlayedSuccessfully = false;
             if (canPlayCard(Card, Number))
-            {
+            { //checks if user can play card
                 bool cont = false;
                 for (int i = 0; i < 8 && !cont; i++)
                 {
@@ -285,14 +297,14 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
                         cont = true;
                     }
                 }
-                updateCurrentCard();
-                jTarget = JTarget;
+                updateCurrentCard(); //updates card
+                jTarget = JTarget; //updates and resets relevant variables
                 timerActive = true;
                 timerTime = 0f;
                 timerStage = 0;
                 cardPlayedSuccessfully = true;
             } 
-            pv.RPC("returnCardResult", RpcTarget.All, cardPlayedSuccessfully, CardObjectNumber, Number);
+            pv.RPC("returnCardResult", RpcTarget.All, cardPlayedSuccessfully, CardObjectNumber, Number); //returns result
         }
     }
 
@@ -304,12 +316,12 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
             string JANumber = "";
             bool cardTakenSuccessfully = false;
             if (cardStack[1] == "none" && (cardCurrent.Substring(0, 1) == "J" || cardCurrent.Remove (0, 1) == "1"))
-            {
-                drawCard();
+            { //checks if card is a natural J/A
+                drawCard(); //replaces card
                 cardTakenSuccessfully = true;
                 JANumber = cardCurrent;
             }
-            pv.RPC("returnJAResult", RpcTarget.All, cardTakenSuccessfully, Number, JANumber);
+            pv.RPC("returnJAResult", RpcTarget.All, cardTakenSuccessfully, Number, JANumber); //returns result
         }
     }
 
@@ -323,17 +335,17 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
             if (countStack() > 3 && cardPlayers[countStack() - 2] == Number)
             {
                 for (int i = 0; i < 8; i++)
-                {
+                { //adds stack to Cards
                     Cards[i] = cardStack[i];
                 }
                 for (int i = 0; i < hammerCards.Count; i++)
-                {
+                { //adds extra cards from hammer to Cards
                     Cards[i + 8] = hammerCards[i];
                 }
-                drawCard();
+                drawCard(); //draws a new card
                 cardTakenSuccessfully = true;
             }
-            pv.RPC("returnHammerResult", RpcTarget.All, cardTakenSuccessfully, Number, Cards);
+            pv.RPC("returnHammerResult", RpcTarget.All, cardTakenSuccessfully, Number, Cards); //returns result of taking hammer
         }
     }
 
@@ -341,18 +353,22 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
     public void playOnHammer(string Card, int CardObjectNumber, int Number)
     {
         if (pv.IsMine)
-        {
+        { //checks if user could play on hammer
             bool cardPlayedSuccessfully = false;
             if (countStack() > 3 && Number != lastPlayer && Number != cardPlayers[countStack() - 2] && !hammerPlayers.Contains(Number))
             {
-                hammerCards.Add(Card);
+                hammerCards.Add(Card); //adds played card to list
                 hammerPlayers.Add(Number);
-                updateCurrentCard();
+                updateCurrentCard(); //updates hammer sprite if needed
                 cardPlayedSuccessfully = true;
             } 
-            pv.RPC("returnCardResult", RpcTarget.All, cardPlayedSuccessfully, CardObjectNumber, Number);
+            pv.RPC("returnCardResult", RpcTarget.All, cardPlayedSuccessfully, CardObjectNumber, Number); //returns result
         }
     }
+
+    #endregion
+
+    #region results and penalties
 
     [PunRPC]
     public void drawPenaltyCards(int PlayerNumber, int CardNumber)
@@ -370,9 +386,9 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
     public void returnCardResult(bool Success, int CardObjectNumber, int Number)
     {
         if (um.selfPlayerNumber == Number && Success)
-        {
-            hm.removeCard(CardObjectNumber);
-            hm.jSelected = false;
+        { //checks if this player successfully played a card
+            hm.removeCard(CardObjectNumber); //removes card from hand
+            hm.jSelected = false; //resets relevant variables
             ct.timerTime = 0f;
         }
     }
@@ -381,11 +397,11 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
     public void hammerExpire(int Number, string[] Cards)
     {
         if (um.selfPlayerNumber == Number)
-        {
+        { //checks if this was the target of the hammer
             for (int i = 0; i < Cards.Length; i++)
             {
                 if (Cards[i] != "none")
-                {
+                { //gives user cards from hammer
                     hm.addCardToHand(Cards[i]);
                 }
             }
@@ -396,26 +412,27 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
     public void returnJAResult(bool Success, int Number, string JANumber)
     {
         if (um.selfPlayerNumber == Number && Success)
-        {
-            hm.addCardToHand(JANumber);
-            hm.cardsToDiscard++;
+        { //checks if this player took a J/A successfully
+            hm.addCardToHand(JANumber); //adds cards to hand
+            hm.cardsToDiscard++; //allows user to discard 1 card
         }
     }
 
     [PunRPC]
     public void returnHammerResult(bool Success, int Number, string[] Cards)
-    {
+    { //returns if a hammer pickup was successful
         if (um.selfPlayerNumber == Number && Success)
-        {
+        { //checks if this player took the hammer successfully
             for (int i = 0; i < Cards.Length; i++)
             {
                 if (Cards[i] != "none")
-                {
+                { //adds cards to hand
                     hm.addCardToHand(Cards[i]);
                 }
             }
         }
     }
+    #endregion
 
     public void updateCurrentCard()
     {
@@ -443,7 +460,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
         
     }
 
-    public void drawCard() //resets cardStack array and draws 1
+    public void drawCard() //resets relevant variables and draws 1
     {
         for (int i = 0; i < 8; i++)
         {
@@ -547,7 +564,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
             }
             plus2.enabled = false;
             if (cardCurrent.Substring(0, 1) == "J" && countStack() > 1)
-            {
+            { //checks if there is a "tap" and displays symbol accordingly
                 symbolSR.enabled = true;
                 symbolSR.sprite = symbolSprites[1];
                 targetMarker.enabled = true;
@@ -557,26 +574,26 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
                 targetMarker.enabled = false;
             }
             if (countStack() < 3 && !(cardCurrent.Substring(0, 1) == "J" && countStack() > 1))
-            {
+            { //disables symbol if it is not needed
                 symbolSR.enabled = false;
             } else if (countStack() == 3)
-            {
+            { //checks if there is a "hit" and displays symbol accordingly
                 symbolSR.enabled = true;
                 symbolSR.sprite = symbolSprites[2];
                 targetMarker.enabled = true;
                 targetMarker.sprite = playerMarkerSprites[cardPlayers[1]];
                 if (cardStack[1].Substring(0, 1) == "J")
-                {
+                { //displays a +2 if a "tap" was hit
                     plus2.enabled = true;
                 }
             } else if (countStack() > 3)
-            {
+            { //displays hammer
                 symbolSR.enabled = true;
                 if (hammerCards.Count == 0)
-                {
+                { //if no cards were played, shows hollow sprite
                     symbolSR.sprite = symbolSprites[0];
                 } else
-                {
+                { //if cards were played, shows filled sprite
                     symbolSR.sprite = hammerSprite;
                 }
                 targetMarker.enabled = true;
@@ -593,7 +610,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-        if (stream.IsWriting) //if client is owner of cards, sends current card
+        if (stream.IsWriting) //if client is owner of cards, sends data
         {
             for (int i = 0; i < 8; i++)
             {
@@ -610,7 +627,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
             stream.SendNext(timerActive);
             stream.SendNext(timerTime);
             stream.SendNext(jTarget);
-        } else //if client is not owner of cards, recieves cards from server and updates the sprite
+        } else //if client is not owner of cards, recieves data
         {
             hammerCards.Clear();
             hammerPlayers.Clear();

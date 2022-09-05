@@ -27,25 +27,26 @@ public class HandManager : MonoBehaviour
     public Trash trash;
     public GameManager Game;
 
-    public void HMStart()
+    public void HMStart() //called by DeckManager to make sure references are set properly
     {
-        um = Object.FindObjectOfType<UserManager>();
+        um = Object.FindObjectOfType<UserManager>(); //updates UserManager to use for drawCard()
         um.Start();
         um.Update();
         for (int i = 0; i < 21; i++)
         {
-            cardObjects[i].cardNumber = i;
+            cardObjects[i].cardNumber = i; //sets references for card objects
         }
         for (int i = 0; i < 7; i++)
         {
-            drawCard();
+            drawCard(); //draws 7 cards
         }
     }
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Mouse0) && cardHover != null && cardHover.cardCurrent != "none")
-        {
+        { //if the user clicks while a card is selected
+        #region card deselect
             bool handCardHover = false;
             for (int i = 0; i < 21; i++)
             {
@@ -57,23 +58,27 @@ public class HandManager : MonoBehaviour
                     }
                 }
             }
-            
             if (handCardHover)
-            {
+            { //if user clicked on a card in their hand, deselects that card
                 cardSelected = !cardSelected;
                 jSelected = false;
             }
-
+        #endregion
+        
+        #region discard
             if (!Game.IsPaused && Camera.main.ScreenToWorldPoint(Input.mousePosition).x <= trash.trans.position.x + 0.5f && Camera.main.ScreenToWorldPoint(Input.mousePosition).x >= trash.trans.position.x - 0.5f && Camera.main.ScreenToWorldPoint(Input.mousePosition).y <= trash.trans.position.y + 0.5f && Camera.main.ScreenToWorldPoint(Input.mousePosition).y >= trash.trans.position.y - 0.5f)
-            {
+            { //checks if user clicked on trash while game is unpaused
                 if (cardsToDiscard > 0)
                 {
-                    cardsToDiscard--;
+                    cardsToDiscard--; //subtracts 1 from cardsToDiscard 
                     dmPV.RPC("discardCard", RpcTarget.All, cardHover.cardCurrent);
-                    removeCard(cardHover.cardNumber);
+                    removeCard(cardHover.cardNumber); //discards card
                 }
             }
+        #endregion
         }
+
+        #region card selection
         if (cardSelected == false) // detects if a card has already been selected
         {
             cardGlowSR.enabled = false; //hides the glow around selected cards
@@ -120,24 +125,27 @@ public class HandManager : MonoBehaviour
                 cardObjects[i].updateSprite(); //updates sprite of card
             }
         }
+        #endregion
+
+        #region joker playing
         ums = FindObjectsOfType<UserManager>();
         if (jSelected)
         {
             foreach (UserManager UM in ums)
-            {
+            { //goes through each Usermanager
                 if (!UM.pv.IsMine)
                 {
-                    UM.cardGlow.enabled = true;
+                    UM.cardGlow.enabled = true; //turns on the glow while a joker is selected
                     Vector2 POS;
                     RectTransformUtility.ScreenPointToLocalPointInRectangle(UM.canvasRT, Input.mousePosition, null, out POS);
                     if (Input.GetKeyDown(KeyCode.Mouse0) && POS.x > UM.rt.anchoredPosition.x - 24 && POS.x < UM.rt.anchoredPosition.x + 24 && POS.y > UM.rt.anchoredPosition.y - 16 && POS.y < UM.rt.anchoredPosition.y + 16)
-                    {
-                        userClicked(UM.playerNumber);
+                    { //checks if user clicked on a UserManager
+                        userClicked(UM.playerNumber); //if so, calls userClicked to play joker
                     }
                 }
             }
         } else
-        {
+        { //disables glow on each UserManager
             foreach (UserManager UM in ums)
             {
                 if (!UM.pv.IsMine && !Game.IsPaused)
@@ -146,10 +154,11 @@ public class HandManager : MonoBehaviour
                 }
             }
         }
+        #endregion
     }
 
     public void userClicked(int Player)
-    { //plays jokers after user clicks on other user
+    { //plays jokers after user clicks on another user
         if (jSelected)
         {
             tcs = FindObjectsOfType<TableCard>();

@@ -9,10 +9,11 @@ public class Trash : MonoBehaviour
     public TextMeshProUGUI textmesh;
     public SpriteRenderer glow;
     public Transform trans;
+    public GameManager Game;
 
     void Update()
     {
         textmesh.text = hm.cardsToDiscard.ToString();
-        glow.enabled = (hm.cardHover != null && hm.cardHover.cardCurrent != "none" && hm.cardsToDiscard > 0);
+        glow.enabled = (!Game.IsPaused && hm.cardHover != null && hm.cardHover.cardCurrent != "none" && hm.cardsToDiscard > 0);
     }
 }

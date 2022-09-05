@@ -25,6 +25,7 @@ public class HandManager : MonoBehaviour
     public UserManager[] ums;
     public TableCard[] tcs;
     public Trash trash;
+    public GameManager Game;
 
     public void HMStart()
     {
@@ -63,7 +64,7 @@ public class HandManager : MonoBehaviour
                 jSelected = false;
             }
 
-            if (Camera.main.ScreenToWorldPoint(Input.mousePosition).x <= trash.trans.position.x + 0.5f && Camera.main.ScreenToWorldPoint(Input.mousePosition).x >= trash.trans.position.x - 0.5f && Camera.main.ScreenToWorldPoint(Input.mousePosition).y <= trash.trans.position.y + 0.5f && Camera.main.ScreenToWorldPoint(Input.mousePosition).y >= trash.trans.position.y - 0.5f)
+            if (!Game.IsPaused && Camera.main.ScreenToWorldPoint(Input.mousePosition).x <= trash.trans.position.x + 0.5f && Camera.main.ScreenToWorldPoint(Input.mousePosition).x >= trash.trans.position.x - 0.5f && Camera.main.ScreenToWorldPoint(Input.mousePosition).y <= trash.trans.position.y + 0.5f && Camera.main.ScreenToWorldPoint(Input.mousePosition).y >= trash.trans.position.y - 0.5f)
             {
                 if (cardsToDiscard > 0)
                 {
@@ -139,7 +140,7 @@ public class HandManager : MonoBehaviour
         {
             foreach (UserManager UM in ums)
             {
-                if (!UM.pv.IsMine)
+                if (!UM.pv.IsMine && !Game.IsPaused)
                 {
                     UM.cardGlow.enabled = false;
                 }

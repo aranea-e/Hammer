@@ -90,7 +90,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
                 JAcg.enabled = canPlayCard(hm.cardHover.cardCurrent, um.selfPlayerNumber); ////glows if a card can be played, does not glow if a card cannot be played
             } else
             {
-                cardGlow.enabled = (canPlayCard(hm.cardHover.cardCurrent, um.selfPlayerNumber) || (countStack() > 3 && lastPlayer != um.selfPlayerNumber && cardPlayers[countStack() - 2] != um.selfPlayerNumber && !hammerPlayers.Contains(um.selfPlayerNumber))); //glows if a card can be played, does not glow if a card cannot be played
+                cardGlow.enabled = (!Game.IsPaused && (canPlayCard(hm.cardHover.cardCurrent, um.selfPlayerNumber) || (countStack() > 3 && lastPlayer != um.selfPlayerNumber && cardPlayers[countStack() - 2] != um.selfPlayerNumber && !hammerPlayers.Contains(um.selfPlayerNumber)))); //glows if a card can be played, does not glow if a card cannot be played
                 JAcg.enabled = false;
             }
         } else
@@ -110,11 +110,11 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
                 pv.RPC("playCard", RpcTarget.All, hm.cardHover.cardCurrent, hm.cardHover.cardNumber, um.selfPlayerNumber, -1); //calls playCard rpc
             }
         }
-        if (cardStack[1] == "none" && (cardCurrent.Substring(0, 1) == "J" || cardCurrent.Remove (0, 1) == "1") && Input.GetKeyDown(KeyCode.Mouse0) && isMouseOnCard())
+        if (!Game.IsPaused && cardStack[1] == "none" && (cardCurrent.Substring(0, 1) == "J" || cardCurrent.Remove (0, 1) == "1") && Input.GetKeyDown(KeyCode.Mouse0) && isMouseOnCard())
         { //checks if player clicked on a table J/A
             pv.RPC("takeJA", RpcTarget.All, um.selfPlayerNumber);
         }
-        if (countStack() > 3 && Input.GetKeyDown(KeyCode.Mouse0) && isMouseOnCard())
+        if (countStack() > 3 && Input.GetKeyDown(KeyCode.Mouse0) && isMouseOnCard() && !Game.IsPaused)
         { //checks if player clicked on a hammer
             if (cardPlayers[countStack() - 2] == um.selfPlayerNumber )
             { //checks if it was targeting the person who clicked

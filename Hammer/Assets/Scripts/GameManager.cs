@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
 {
     public bool IsPaused;
     
@@ -15,5 +16,16 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         spawner.SpawnStart();
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            stream.SendNext(IsPaused);
+        } else
+        {
+            IsPaused = (bool)stream.ReceiveNext();
+        }
     }
 }

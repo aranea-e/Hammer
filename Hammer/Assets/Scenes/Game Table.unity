@@ -876,6 +876,7 @@ GameObject:
   - component: {fileID: 392414619}
   - component: {fileID: 392414618}
   - component: {fileID: 392414620}
+  - component: {fileID: 392414621}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -945,6 +946,29 @@ MonoBehaviour:
   dm: {fileID: 0}
   tableCards: []
   handCards: []
+--- !u!114 &392414621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 392414617}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 392414620}
+  sceneViewId: 1
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &405098902
 GameObject:
   m_ObjectHideFlags: 0
@@ -3177,6 +3201,7 @@ MonoBehaviour:
   textmesh: {fileID: 1962595311}
   glow: {fileID: 1536894584}
   trans: {fileID: 1520176675}
+  Game: {fileID: 392414620}
 --- !u!1 &1536894582
 GameObject:
   m_ObjectHideFlags: 0
@@ -4248,6 +4273,7 @@ MonoBehaviour:
   - {fileID: 0}
   tcs: []
   trash: {fileID: 1520176676}
+  Game: {fileID: 392414620}
 --- !u!1 &2045606136
 GameObject:
   m_ObjectHideFlags: 0

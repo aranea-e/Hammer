@@ -145,10 +145,6 @@ public class HandManager : MonoBehaviour
                 }
             }
         }
-        if (Input.GetKeyDown("space") )
-        {
-            drawCard();
-        }
     }
 
     public void userClicked(int Player)

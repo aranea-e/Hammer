@@ -941,11 +941,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsPaused: 0
+  playerNumberList: 
+  selfPlayerNumber: 0
   spawner: {fileID: 392414618}
   hm: {fileID: 1973103731}
   dm: {fileID: 0}
   tableCards: []
   handCards: []
+  pv: {fileID: 392414621}
 --- !u!114 &392414621
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1471,7 +1474,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f579ef063f6e314696f13d3cc4e564c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  um: {fileID: 0}
+  Game: {fileID: 392414620}
   sprites: []
   sr: {fileID: 527552784}
 --- !u!212 &527552784

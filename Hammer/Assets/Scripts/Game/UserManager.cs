@@ -8,9 +8,6 @@ using Photon.Pun;
 public class UserManager : MonoBehaviourPunCallbacks, IPunObservable
 {
     #region vars
-    public int playerActorNumber;
-    public int selfPlayerNumber;
-    public int playerNumber;
     public int symbolNumber;
     public string username;
     public int cards;
@@ -18,8 +15,9 @@ public class UserManager : MonoBehaviourPunCallbacks, IPunObservable
     public Vector2[] posList;
     public Sprite[] sprites;
     public Sprite sprite;
-    public Photon.Realtime.Player[] playerList;
-    public int[] playerNumberList;
+    public bool IsPlaying;
+    public int playerActorNumber;
+    public int playerNumber;
     #endregion
 
     #region refs
@@ -32,52 +30,23 @@ public class UserManager : MonoBehaviourPunCallbacks, IPunObservable
     public Image symbolUI;
     public Image cardGlow;
     public Canvas canvas;
+    public GameManager Game;
     #endregion
 
     public void Start()
     {
-        playerList = new Photon.Realtime.Player[25];
         if (pv.IsMine)
         { //loads username and own ActorNumber
             username = PlayerPrefs.GetString("Username");
-            playerActorNumber = PhotonNetwork.LocalPlayer.ActorNumber;
         }
+        playerActorNumber = pv.OwnerActorNr;
         hm = Object.FindObjectOfType<HandManager>(); //sets references
         sprites = Resources.LoadAll<Sprite>("Sprites/PlayerMarkers");
+        Game = Object.FindObjectOfType<GameManager>();
     }
 
     public void Update()
     {
-        #region number list
-        for (int i = 0; i < 25; i++)
-        {
-            if (i < PhotonNetwork.PlayerList.Length)
-            { //sets list of players
-                playerList[i] = PhotonNetwork.PlayerList[i];
-            } else
-            {
-                playerList[i] = null;
-            }
-            if (playerList[i] == null)
-            { //sets list of player numbers to be used for things such as symbols
-                playerNumberList[i] = -1;
-            } else
-            {
-                playerNumberList[i] = playerList[i].ActorNumber;
-            }
-            if (playerNumberList[i] == playerActorNumber)
-            { //sets number of UserManager owner
-                playerNumber = i;
-            }
-            if (playerNumberList[i] == PhotonNetwork.LocalPlayer.ActorNumber)
-            { //sets number of client
-                selfPlayerNumber = i;
-            }
-        }
-        symbolNumber = playerNumber; //sets number for symbol to be displayed
-        #endregion
-
-        #region display
         if (pv.IsMine)
         { //counts cards in hand and hides UserManager
             cards = hm.countHand();
@@ -85,7 +54,7 @@ public class UserManager : MonoBehaviourPunCallbacks, IPunObservable
         } else
         { //displays player info
             canvas.enabled = true;
-            if (playerNumber > selfPlayerNumber)
+            if (playerNumber > Game.selfPlayerNumber)
             { //moves to appropriate location
                 pos = posList[playerNumber - 1];
             } else
@@ -104,22 +73,35 @@ public class UserManager : MonoBehaviourPunCallbacks, IPunObservable
             }
             symbolUI.sprite = sprite;
         }
-        #endregion
-        
+    }
+
+    public void updateUser()
+    {
+        Game = Object.FindObjectOfType<GameManager>();
+        for (int i = 0; i < 25; i++)
+        {
+            if (playerActorNumber == Game.playerNumberList[i])
+            {
+                playerNumber = i;
+            }
+        }
+        symbolNumber = playerNumber;
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if (stream.IsWriting) //if client is owner of UserManager, sends all data
         {
-            stream.SendNext(playerActorNumber);
+            stream.SendNext(playerNumber);
             stream.SendNext(username);
             stream.SendNext(cards);
+            stream.SendNext(IsPlaying);
         } else //if client is not owner of UserManager, recieves data
         {
-            playerActorNumber = (int)stream.ReceiveNext();
+            playerNumber = (int)stream.ReceiveNext();
             username = (string)stream.ReceiveNext();
             cards = (int)stream.ReceiveNext();
+            IsPlaying = (bool)stream.ReceiveNext();
         }
     }
 }

@@ -174,7 +174,7 @@ public class HandManager : MonoBehaviour
         if (countHand() < 21)
         { //if space is available in hand
             um = Object.FindObjectOfType<UserManager>();
-            dmPV.RPC("requestDrawCard", RpcTarget.All, um.selfPlayerNumber); //requests a card from the DM to add to hand
+            dmPV.RPC("requestDrawCard", RpcTarget.All, Game.selfPlayerNumber); //requests a card from the DM to add to hand
         }
     }
 

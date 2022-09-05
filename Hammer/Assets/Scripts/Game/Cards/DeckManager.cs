@@ -71,7 +71,7 @@ public class DeckManager : MonoBehaviourPunCallbacks, IPunObservable
     public void returnDrawnCard(int PlayerNumber, string Card)
     { //returns card from requestDrawCard to player who requested card
         um = Object.FindObjectOfType<UserManager>();
-        if (um.selfPlayerNumber == PlayerNumber)
+        if (Game.selfPlayerNumber == PlayerNumber)
         { //checks if this is the player who requested card
             hm.addCardToHand(Card); //gives card
         }

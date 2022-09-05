@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerMarker : MonoBehaviour
 {
-    public UserManager um;
+    public GameManager Game;
     public Sprite[] sprites;
     public SpriteRenderer sr;
 
@@ -15,7 +15,6 @@ public class PlayerMarker : MonoBehaviour
 
     void Update()
     {
-        um = Object.FindObjectOfType<UserManager>();
-        sr.sprite = sprites[um.selfPlayerNumber]; //sets sprite in corner to own player marker
+        sr.sprite = sprites[Game.selfPlayerNumber]; //sets sprite in corner to own player marker
     }
 }

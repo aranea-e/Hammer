@@ -573,9 +573,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 186c3fd3c60775441ba6cfe9e1542f04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerActorNumber: 0
-  selfPlayerNumber: 0
-  playerNumber: 0
   symbolNumber: 0
   username: 
   cards: 0
@@ -607,7 +604,9 @@ MonoBehaviour:
   - {x: 0, y: 0}
   sprites: []
   sprite: {fileID: 0}
-  playerNumberList: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  IsPlaying: 0
+  playerActorNumber: 0
+  playerNumber: 0
   pv: {fileID: 8716282444465609997}
   hm: {fileID: 0}
   rt: {fileID: 1748535002726738149}
@@ -617,6 +616,7 @@ MonoBehaviour:
   symbolUI: {fileID: 717546455635792179}
   cardGlow: {fileID: 4866544828666895306}
   canvas: {fileID: 6515536329597364160}
+  Game: {fileID: 0}
 --- !u!114 &8716282444465609997
 MonoBehaviour:
   m_ObjectHideFlags: 0

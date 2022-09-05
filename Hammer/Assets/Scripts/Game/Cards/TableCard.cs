@@ -91,10 +91,10 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
             if (lastPlayer != -1 && (cardCurrent.Substring(0, 1) == "J" || cardCurrent.Remove (0, 1) == "1"))
             { //checks whether the top card is a J/A
                 cardGlow.enabled = false;
-                JAcg.enabled = canPlayCard(hm.cardHover.cardCurrent, um.selfPlayerNumber); //glows if a card can be played, does not glow if a card cannot be played
+                JAcg.enabled = canPlayCard(hm.cardHover.cardCurrent, Game.selfPlayerNumber); //glows if a card can be played, does not glow if a card cannot be played
             } else
             {
-                cardGlow.enabled = (!Game.IsPaused && (canPlayCard(hm.cardHover.cardCurrent, um.selfPlayerNumber) || (countStack() > 3 && lastPlayer != um.selfPlayerNumber && cardPlayers[countStack() - 2] != um.selfPlayerNumber && !hammerPlayers.Contains(um.selfPlayerNumber)))); //glows if a card can be played, does not glow if a card cannot be played
+                cardGlow.enabled = (!Game.IsPaused && (canPlayCard(hm.cardHover.cardCurrent, Game.selfPlayerNumber) || (countStack() > 3 && lastPlayer != Game.selfPlayerNumber && cardPlayers[countStack() - 2] != Game.selfPlayerNumber && !hammerPlayers.Contains(Game.selfPlayerNumber)))); //glows if a card can be played, does not glow if a card cannot be played
                 JAcg.enabled = false;
             }
         } else
@@ -105,7 +105,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
         #endregion
         
         #region play or take cards
-        if (hm.cardHover != null && canPlayCard(hm.cardHover.cardCurrent, um.selfPlayerNumber) && Input.GetKeyDown(KeyCode.Mouse0) && isMouseOnCard())
+        if (hm.cardHover != null && canPlayCard(hm.cardHover.cardCurrent, Game.selfPlayerNumber) && Input.GetKeyDown(KeyCode.Mouse0) && isMouseOnCard())
         { //checks if a card can be played and the player clicked on this card
             if (hm.cardHover.cardCurrent.Substring(0, 1) == "J") //checks if a joker was played
             {
@@ -113,21 +113,21 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
                 hm.jCard = cardNumber;
             } else
             {
-                pv.RPC("playCard", RpcTarget.All, hm.cardHover.cardCurrent, hm.cardHover.cardNumber, um.selfPlayerNumber, -1); //calls playCard rpc
+                pv.RPC("playCard", RpcTarget.All, hm.cardHover.cardCurrent, hm.cardHover.cardNumber, Game.selfPlayerNumber, -1); //calls playCard rpc
             }
         }
         if (!Game.IsPaused && cardStack[1] == "none" && (cardCurrent.Substring(0, 1) == "J" || cardCurrent.Remove (0, 1) == "1") && Input.GetKeyDown(KeyCode.Mouse0) && isMouseOnCard())
         { //checks if player clicked on a table J/A
-            pv.RPC("takeJA", RpcTarget.All, um.selfPlayerNumber);
+            pv.RPC("takeJA", RpcTarget.All, Game.selfPlayerNumber);
         }
         if (countStack() > 3 && Input.GetKeyDown(KeyCode.Mouse0) && isMouseOnCard() && !Game.IsPaused)
         { //checks if player clicked on a hammer
-            if (cardPlayers[countStack() - 2] == um.selfPlayerNumber )
+            if (cardPlayers[countStack() - 2] == Game.selfPlayerNumber )
             { //checks if it was targeting the person who clicked
-                pv.RPC("takeHammer", RpcTarget.All, um.selfPlayerNumber);
-            } else if (lastPlayer != um.selfPlayerNumber && hm.cardSelected)
+                pv.RPC("takeHammer", RpcTarget.All, Game.selfPlayerNumber);
+            } else if (lastPlayer != Game.selfPlayerNumber && hm.cardSelected)
             { //checks if it was not played by this player and a card is selected
-                pv.RPC("playOnHammer", RpcTarget.All, hm.cardHover.cardCurrent, hm.cardHover.cardNumber, um.selfPlayerNumber);
+                pv.RPC("playOnHammer", RpcTarget.All, hm.cardHover.cardCurrent, hm.cardHover.cardNumber, Game.selfPlayerNumber);
             }
             
         }
@@ -158,7 +158,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
         if (CardNumber == cardNumber)
         {
             um = Object.FindObjectOfType<UserManager>();
-            pv.RPC("playCard", RpcTarget.All, hm.cardHover.cardCurrent, hm.cardHover.cardNumber, um.selfPlayerNumber, Player);
+            pv.RPC("playCard", RpcTarget.All, hm.cardHover.cardCurrent, hm.cardHover.cardNumber, Game.selfPlayerNumber, Player);
         }
     }
 
@@ -373,7 +373,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     public void drawPenaltyCards(int PlayerNumber, int CardNumber)
     {
-        if (um.selfPlayerNumber == PlayerNumber)
+        if (Game.selfPlayerNumber == PlayerNumber)
         {
             for (int i = 0; i < CardNumber; i++)
             {
@@ -385,7 +385,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     public void returnCardResult(bool Success, int CardObjectNumber, int Number)
     {
-        if (um.selfPlayerNumber == Number && Success)
+        if (Game.selfPlayerNumber == Number && Success)
         { //checks if this player successfully played a card
             hm.removeCard(CardObjectNumber); //removes card from hand
             hm.jSelected = false; //resets relevant variables
@@ -396,7 +396,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     public void hammerExpire(int Number, string[] Cards)
     {
-        if (um.selfPlayerNumber == Number)
+        if (Game.selfPlayerNumber == Number)
         { //checks if this was the target of the hammer
             for (int i = 0; i < Cards.Length; i++)
             {
@@ -411,7 +411,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     public void returnJAResult(bool Success, int Number, string JANumber)
     {
-        if (um.selfPlayerNumber == Number && Success)
+        if (Game.selfPlayerNumber == Number && Success)
         { //checks if this player took a J/A successfully
             hm.addCardToHand(JANumber); //adds cards to hand
             hm.cardsToDiscard++; //allows user to discard 1 card
@@ -421,7 +421,7 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     public void returnHammerResult(bool Success, int Number, string[] Cards)
     { //returns if a hammer pickup was successful
-        if (um.selfPlayerNumber == Number && Success)
+        if (Game.selfPlayerNumber == Number && Success)
         { //checks if this player took the hammer successfully
             for (int i = 0; i < Cards.Length; i++)
             {

@@ -168,6 +168,7 @@ MonoBehaviour:
   - {fileID: -2041069703, guid: 5b959ab07b166504892527e1199ef619, type: 3}
   Game: {fileID: 392414620}
   hm: {fileID: 1973103731}
+  trans: {fileID: 41810907}
 --- !u!212 &41810906
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -910,19 +911,6 @@ MonoBehaviour:
   - {x: -0.75, y: -2.34375}
   - {x: 0.75, y: -2.34375}
   - {x: 2.25, y: -2.34375}
-  Cards:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   Game: {fileID: 392414620}
 --- !u!4 &392414619
 Transform:

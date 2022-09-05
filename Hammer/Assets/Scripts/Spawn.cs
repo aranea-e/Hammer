@@ -12,7 +12,7 @@ public class Spawn : MonoBehaviour
 
     public GameManager Game;
 
-    public void SpawnStart() //uses Awake to make sure references get assigned properly in Start functions
+    public void SpawnStart() //uses custom start to make sure references get assigned properly in Start functions
     {
         if (PhotonNetwork.IsMasterClient)
         {    

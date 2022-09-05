@@ -13,7 +13,8 @@ public class Trash : MonoBehaviour
 
     void Update()
     {
-        textmesh.text = hm.cardsToDiscard.ToString();
+        textmesh.text = hm.cardsToDiscard.ToString(); //displays number of cards user can discard
         glow.enabled = (!Game.IsPaused && hm.cardHover != null && hm.cardHover.cardCurrent != "none" && hm.cardsToDiscard > 0);
+        //glows if user can discard a card
     }
 }

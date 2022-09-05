@@ -16,6 +16,6 @@ public class PlayerMarker : MonoBehaviour
     void Update()
     {
         um = Object.FindObjectOfType<UserManager>();
-        sr.sprite = sprites[um.selfPlayerNumber];
+        sr.sprite = sprites[um.selfPlayerNumber]; //sets sprite in corner to own player marker
     }
 }

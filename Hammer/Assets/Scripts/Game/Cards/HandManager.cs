@@ -149,7 +149,7 @@ public class HandManager : MonoBehaviour
     }
 
     public void userClicked(int Player)
-    {
+    { //plays jokers after user clicks on other user
         if (jSelected)
         {
             tcs = FindObjectsOfType<TableCard>();
@@ -163,14 +163,14 @@ public class HandManager : MonoBehaviour
     public void drawCard()
     {
         if (countHand() < 21)
-        {
+        { //if space is available in hand
             um = Object.FindObjectOfType<UserManager>();
-            dmPV.RPC("requestDrawCard", RpcTarget.All, um.selfPlayerNumber);
+            dmPV.RPC("requestDrawCard", RpcTarget.All, um.selfPlayerNumber); //requests a card from the DM to add to hand
         }
     }
 
     public void addCardToHand(string Card)
-    {
+    { //adds Card to first available spot in hand
         bool cont = false;
         for (int i = 0; i < 21 && !cont; i++)
             {
@@ -183,7 +183,7 @@ public class HandManager : MonoBehaviour
     }
 
     public int countHand()
-    {
+    { //checks number of cards in hand which != "none"
         cardCount = 0;
         for (int i = 0; i < 21; i++)
         {

@@ -38,68 +38,73 @@ public class UserManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         playerList = new Photon.Realtime.Player[25];
         if (pv.IsMine)
-        {
+        { //loads username and own ActorNumber
             username = PlayerPrefs.GetString("Username");
             playerActorNumber = PhotonNetwork.LocalPlayer.ActorNumber;
         }
-        hm = Object.FindObjectOfType<HandManager>();
+        hm = Object.FindObjectOfType<HandManager>(); //sets references
         sprites = Resources.LoadAll<Sprite>("Sprites/PlayerMarkers");
     }
 
     public void Update()
     {
+        #region number list
         for (int i = 0; i < 25; i++)
         {
             if (i < PhotonNetwork.PlayerList.Length)
-            {
+            { //sets list of players
                 playerList[i] = PhotonNetwork.PlayerList[i];
             } else
             {
                 playerList[i] = null;
             }
             if (playerList[i] == null)
-            {
+            { //sets list of player numbers to be used for things such as symbols
                 playerNumberList[i] = -1;
             } else
             {
                 playerNumberList[i] = playerList[i].ActorNumber;
             }
             if (playerNumberList[i] == playerActorNumber)
-            {
+            { //sets number of UserManager owner
                 playerNumber = i;
             }
             if (playerNumberList[i] == PhotonNetwork.LocalPlayer.ActorNumber)
-            {
+            { //sets number of client
                 selfPlayerNumber = i;
             }
         }
-        symbolNumber = playerNumber;
+        symbolNumber = playerNumber; //sets number for symbol to be displayed
+        #endregion
+
+        #region display
         if (pv.IsMine)
-        {
+        { //counts cards in hand and hides UserManager
             cards = hm.countHand();
             canvas.enabled = false;
         } else
-        {
+        { //displays player info
             canvas.enabled = true;
             if (playerNumber > selfPlayerNumber)
-            {
+            { //moves to appropriate location
                 pos = posList[playerNumber - 1];
             } else
             {
                 pos = posList[playerNumber];
             }
             rt.anchoredPosition = pos;
-            usernameUI.text = username;
-            cardsUI.text = cards.ToString();
+            usernameUI.text = username; //displays username
+            cardsUI.text = cards.ToString(); //displays number of cards
             for (int i = 0; i < sprites.Length; i++)
             {
                 if ("PlayerMarkers_" + symbolNumber.ToString() == sprites[i].name)
-                {
+                { //displays player marker sprite
                     sprite = sprites[i];
                 }
             }
             symbolUI.sprite = sprite;
         }
+        #endregion
         
     }
 

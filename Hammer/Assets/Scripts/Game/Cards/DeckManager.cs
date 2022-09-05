@@ -26,26 +26,21 @@ public class DeckManager : MonoBehaviourPunCallbacks, IPunObservable
 
     void Start()
     {
-        hm = Object.FindObjectOfType<HandManager>();
+        hm = Object.FindObjectOfType<HandManager>(); //sets references
         hm.dm = this;
         hm.dmPV = pv;
         Game = Object.FindObjectOfType<GameManager>();
         discard = Object.FindObjectOfType<Discard>();
         um = Object.FindObjectOfType<UserManager>();
-        ResetDeck();
-        Shuffle();
         Game.dm = this;
         Game.tableCards = cardObjects;
-        hm.HMStart();
-    }
-
-    void Update()
-    {
-        if (Input.GetKeyDown("e") && pv.IsMine)
+        if (pv.IsMine)
         {
-            drawTable();
+            ResetDeck(); //resets and shuffles deck
+            Shuffle();
+            drawTable(); //fills table
         }
-        um = Object.FindObjectOfType<UserManager>();
+        hm.HMStart(); //calls HandManager start function
     }
 
     #region functions
@@ -71,12 +66,15 @@ public class DeckManager : MonoBehaviourPunCallbacks, IPunObservable
         updateDeckSprite(); //updates the deck to reflect change
     }
 
+    #region draw card
+
     [PunRPC]
     public void returnDrawnCard(int PlayerNumber, string Card)
-    {
+    { //returns card from requestDrawCard to player who requested card
+        um = Object.FindObjectOfType<UserManager>();
         if (um.selfPlayerNumber == PlayerNumber)
-        {
-            hm.addCardToHand(Card);
+        { //checks if this is the player who requested card
+            hm.addCardToHand(Card); //gives card
         }
     }
 
@@ -89,12 +87,6 @@ public class DeckManager : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
-    [PunRPC]
-    public void discardCard(string Card)
-    {
-        discard.discardCard(Card);
-    }
-
     public string drawCard()
     {
         bool cont = false;
@@ -102,7 +94,7 @@ public class DeckManager : MonoBehaviourPunCallbacks, IPunObservable
         for (int i = 0; !cont && i < 54; i++)
         {
             /*
-            finds the topmost card != none
+            finds the topmost card which != none
             if all cards == none, returns none
             */
             if (deck[i] != "none")
@@ -115,17 +107,25 @@ public class DeckManager : MonoBehaviourPunCallbacks, IPunObservable
         updateDeckSprite(); //update deck to reflect drawn card
         if (countDeck() == 0)
         {
-            Game.IsPaused = true;
+            Game.IsPaused = true; //pauses if deck runs out of cards
         }
         return temp;
     }
 
+    #endregion
+
+    [PunRPC]
+    public void discardCard(string Card)
+    { //discards card
+        discard.discardCard(Card);
+    }
+    
     public int countDeck()
-    {
+    { //counts remaining cards
         cards = 0;
         for (int i = 0; i < deck.Length; i++)
         {
-            //checks the number of cards in the deck != none
+            //checks the number of cards in the deck which != none
             if (deck[i] != "none")
             {
                 cards++;

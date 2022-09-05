@@ -36,6 +36,6 @@ public class Discard : MonoBehaviour
 
     public void discardCard(string Card)
     {
-        discardedCard = Card;
+        discardedCard = Card; //changes card to discarded card
     }
 }

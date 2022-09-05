@@ -9,6 +9,6 @@ public class PausePlay : MonoBehaviour
 
     void Update()
     {
-        sr.enabled = Game.IsPaused;
+        sr.enabled = Game.IsPaused; //displays if game is paused
     }
 }

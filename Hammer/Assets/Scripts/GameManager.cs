@@ -22,10 +22,10 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (stream.IsWriting)
         {
-            stream.SendNext(IsPaused);
+            stream.SendNext(IsPaused); //sends game pause state to clients
         } else
         {
-            IsPaused = (bool)stream.ReceiveNext();
+            IsPaused = (bool)stream.ReceiveNext(); //recieves game pause state
         }
     }
 }

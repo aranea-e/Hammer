@@ -36,9 +36,4 @@ public class HandCard : MonoBehaviour
             sr.enabled = true; //enables the sprite in case it was previously none
         }
     }
-
-    public void cardClicked()
-    {
-        
-    }
 }

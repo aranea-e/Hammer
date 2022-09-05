@@ -18,7 +18,7 @@ public class RegionSelect : MonoBehaviourPunCallbacks
         options.Clear();
         int j = -1;
         for (int i = 0; i < pl.servers.Length; i++)
-        {
+        { //adds all servers from PingList, and sets j to current server
             options.Add(pl.servers[i] + ", " + pl.pings[i] + "ms");
             if (pl.servers[i] == PhotonNetwork.CloudRegion)
             {
@@ -26,8 +26,8 @@ public class RegionSelect : MonoBehaviourPunCallbacks
             }
         }
         dd.ClearOptions();
-        dd.AddOptions(options);
-        dd.value = j;
+        dd.AddOptions(options); //adds options to dropdown menu
+        dd.value = j; //sets selected option to current region
     }
 
     public void OnChange()
@@ -35,7 +35,7 @@ public class RegionSelect : MonoBehaviourPunCallbacks
         string regionName = "";
         bool cont = false;
         for (int i = 0; !cont; i++)
-        {
+        { //finds ID for selected region
             if (tmp.text.Substring(i, 1) == ",")
             {
                 cont = true;
@@ -44,7 +44,7 @@ public class RegionSelect : MonoBehaviourPunCallbacks
                 regionName += tmp.text.Substring(i, 1);
             }
         }
-        PhotonNetwork.Disconnect();
-        PhotonNetwork.ConnectToRegion(regionName);
+        PhotonNetwork.Disconnect(); //leaves current region
+        PhotonNetwork.ConnectToRegion(regionName); //joins selected region
     }
 }

@@ -28,11 +28,14 @@ public class HandManager : MonoBehaviour
 
     public void HMStart()
     {
+        um = Object.FindObjectOfType<UserManager>();
+        um.Start();
+        um.Update();
         for (int i = 0; i < 21; i++)
         {
             cardObjects[i].cardNumber = i;
         }
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 7; i++)
         {
             drawCard();
         }

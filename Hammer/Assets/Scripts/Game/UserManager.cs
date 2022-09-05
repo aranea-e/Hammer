@@ -34,7 +34,7 @@ public class UserManager : MonoBehaviourPunCallbacks, IPunObservable
     public Canvas canvas;
     #endregion
 
-    void Start()
+    public void Start()
     {
         playerList = new Photon.Realtime.Player[25];
         if (pv.IsMine)
@@ -46,7 +46,7 @@ public class UserManager : MonoBehaviourPunCallbacks, IPunObservable
         sprites = Resources.LoadAll<Sprite>("Sprites/PlayerMarkers");
     }
 
-    void Update()
+    public void Update()
     {
         for (int i = 0; i < 25; i++)
         {

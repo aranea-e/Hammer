@@ -13,4 +13,6 @@ Jokers and Aces are both played as wilds, but cannot be played on top of other p
 
 If a player runs out of cards, the game is paused for a moment and all other players draw 3 (a "quake"). The player who ran out also draws 3, but draws an additional card for each time they've triggered a "quake" that game.
 
+Players must keep playing constantly. If a player does not play a card for 5 seconds, they draw 2. Players can at any time request 2 cards and reset this timer.
+
 If the deck ever runs out of cards, the game is paused and all discards are shuffled. All players' cards are counted, and if a player has above 15 cards, they are eliminated. If a player ever would need to draw a 22nd card, they are eliminated immediatly.

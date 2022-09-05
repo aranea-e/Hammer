@@ -22,6 +22,7 @@ public class CardTimer : MonoBehaviour
             {
                 timerTime -= timeToDraw;
                 hm.drawCard();
+                hm.drawCard();
             }
             sr.sprite = sprites[(int)Math.Floor((timerTime / timeToDraw) * 9)];
         }

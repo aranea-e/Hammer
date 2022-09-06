@@ -38,7 +38,7 @@ public class CardTimer : MonoBehaviour
         {
             timerTime = 0f;
         }
-        sr.enabled = Game.isUserPlaying;
-        cardSR.enabled = Game.isUserPlaying;
+        sr.enabled = (Game.isUserPlaying && !Game.IsPregame);
+        cardSR.enabled = (Game.isUserPlaying && !Game.IsPregame);
     }
 }

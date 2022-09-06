@@ -18,6 +18,7 @@ public class UserManager : MonoBehaviourPunCallbacks, IPunObservable
     public bool IsPlaying;
     public int playerActorNumber;
     public int playerNumber;
+    public bool newJoin;
     #endregion
 
     #region refs
@@ -58,14 +59,8 @@ public class UserManager : MonoBehaviourPunCallbacks, IPunObservable
         { //displays player info
             canvas.enabled = true;
             usernameUI.text = username; //displays username
-            if (playerNumber > Game.selfPlayerNumber)
-            { //moves to appropriate location
-            pos = posList[playerNumber - 1];
-            } else
-            {
-                pos = posList[playerNumber];
-            }
-            rt.anchoredPosition = pos;
+            usernameUI.enabled = true;
+            cardUI.enabled = true;
             if (IsPlaying)
             {
                 cardsUI.text = cards.ToString(); //displays number of cards
@@ -85,6 +80,23 @@ public class UserManager : MonoBehaviourPunCallbacks, IPunObservable
                 cardsUI.enabled = false;
                 symbolUI.enabled = false;
                 cardUI.sprite = graySprite;
+            }
+            if (newJoin)
+            {
+                cardsUI.enabled = false;
+                symbolUI.enabled = false;
+                cardUI.enabled = false;
+                usernameUI.enabled = false;
+            } else
+            {
+                if (playerNumber > Game.selfPlayerNumber)
+                { //moves to appropriate location
+                    pos = posList[playerNumber - 1];
+                } else
+                {
+                    pos = posList[playerNumber];
+                }
+                rt.anchoredPosition = pos;
             }
         }
     }
@@ -110,12 +122,14 @@ public class UserManager : MonoBehaviourPunCallbacks, IPunObservable
             stream.SendNext(username);
             stream.SendNext(cards);
             stream.SendNext(IsPlaying);
+            stream.SendNext(newJoin);
         } else //if client is not owner of UserManager, recieves data
         {
             playerNumber = (int)stream.ReceiveNext();
             username = (string)stream.ReceiveNext();
             cards = (int)stream.ReceiveNext();
             IsPlaying = (bool)stream.ReceiveNext();
+            newJoin = (bool)stream.ReceiveNext();
         }
     }
 }

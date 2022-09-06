@@ -607,6 +607,7 @@ MonoBehaviour:
   IsPlaying: 1
   playerActorNumber: 0
   playerNumber: 0
+  newJoin: 1
   pv: {fileID: 8716282444465609997}
   hm: {fileID: 0}
   rt: {fileID: 1748535002726738149}

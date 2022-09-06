@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
 {
     public bool IsPaused;
     public bool isUserPlaying;
+    public bool IsPregame;
 
     public Photon.Realtime.Player[] playerList;
     public int[] playerNumberList;
@@ -27,12 +28,28 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
 
     void Update()
     {
+        if (IsPregame)
+        {
+            IsPaused = true;
+            UpdatePlayerList();
+        }
         UserManager[] UMS = Object.FindObjectsOfType<UserManager>();
         foreach (UserManager UM in UMS)
         {
             if (UM.playerNumber == selfPlayerNumber)
             {
-                isUserPlaying = UM.IsPlaying;
+                if (IsPregame)
+                {
+                    UM.IsPlaying = true;
+                    isUserPlaying = true;
+                } else
+                {
+                    isUserPlaying = UM.IsPlaying;
+                }
+            }
+            if (IsPregame)
+            {
+                UM.newJoin = false;
             }
         }
     }   
@@ -60,10 +77,14 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
                 {
                     playerNumberList[i] = playerList[i].ActorNumber;
                 }
-                if (playerNumberList[i] == PhotonNetwork.LocalPlayer.ActorNumber)
-                { //sets number of client
-                    selfPlayerNumber = i;
-                }
+            }
+        }
+
+        for (int i = 0; i < playerNumberList.Length; i++)
+        {
+            if (playerNumberList[i] == PhotonNetwork.LocalPlayer.ActorNumber)
+            { //sets number of client
+                selfPlayerNumber = i;
             }
         }
         
@@ -82,6 +103,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
             if (PhotonNetwork.IsMasterClient)
             {
                 stream.SendNext(IsPaused); //sends game pause state to clients
+                stream.SendNext(IsPregame);
                 for (int i = 0; i < playerNumberList.Length; i++)
                 {
                     stream.SendNext(playerNumberList[i]);
@@ -92,6 +114,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
             if (!PhotonNetwork.IsMasterClient)
             {
                 IsPaused = (bool)stream.ReceiveNext(); //recieves game pause state
+                IsPregame = (bool)stream.ReceiveNext();
                 playerNumberList = new int[25];
                 for (int i = 0; i < playerNumberList.Length; i++)
                 {

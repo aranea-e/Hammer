@@ -10,5 +10,9 @@ public class PausePlay : MonoBehaviour
     void Update()
     {
         sr.enabled = Game.IsPaused; //displays if game is paused
+        if (Game.IsPregame)
+        {
+            sr.enabled = false; //hides if the game is in pregame
+        }
     }
 }

@@ -201,7 +201,7 @@ public class HandManager : MonoBehaviour
             Game.Lose();
         }
         if (Card == "none")
-        {
+        { //if deck did not return a card, adds 1 to cardsToDraw
             cardsToDraw++;
         }
     }

@@ -10,10 +10,15 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     public bool IsPregame;
     public bool isUserNewJoin;
     public int[] playerStatusList;
+    public int remainingPlayers;
+    public int lastPlayer;
 
     public int pauseReason;
     public bool isFirstPauseFrame;
     public float pauseDuration;
+    public bool isFirstPregame;
+    public bool isWinscreen;
+    public string winner;
 
     public Photon.Realtime.Player[] playerList;
     public int[] playerNumberList;
@@ -70,15 +75,40 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
         #region player status
         playerStatusList = new int[PhotonNetwork.PlayerList.Length];
         foreach (UserManager UM in UMS)
-        {
+        { //keeps track of if players are playing or not
             if (!UM.newJoin)
             {
                 if (UM.IsPlaying)
                 {
-                    playerStatusList[UM.playerNumber] = 1;
+                    playerStatusList[UM.playerNumber] = 1; //sets number to 1 if playing
                 } else
                 {
-                    playerStatusList[UM.playerNumber] = 2;
+                    playerStatusList[UM.playerNumber] = 2; //sets number to 2 if player lost
+                }
+            }
+        }
+        remainingPlayers = 0;
+        for (int i = 0; i < playerStatusList.Length; i++)
+        {
+            if (playerStatusList[i] == 1)
+            {
+                remainingPlayers++;
+                lastPlayer = i;
+            }
+        }
+        if (remainingPlayers == 0 && PhotonNetwork.IsMasterClient)
+        {
+            IsPregame = true;
+            winner = "nobody";
+        }
+        if (remainingPlayers == 1 && PhotonNetwork.IsMasterClient)
+        {
+            IsPregame = true;
+            foreach (UserManager UM in UMS)
+            {
+                if (UM.playerNumber == lastPlayer)
+                {
+                    winner = UM.username;
                 }
             }
         }
@@ -86,20 +116,21 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
         #region pause
         if (IsPaused)
         {
-            pauseDuration += Time.deltaTime;
+            pauseDuration += Time.deltaTime; //increases pauseDuration by time since last frame
             if (isFirstPauseFrame && pauseReason == 1)
-            {
-                dm.requestCardsFromHands();
-                pv.RPC("checkCards", RpcTarget.All);
+            { //if this is the first frame after the deck ran out
+                dm.requestCardsFromHands(); //resets deck
+                pv.RPC("checkCards", RpcTarget.All); //checks if players lost
             }
+            isWinscreen = (pauseDuration <= 3f && pauseReason == 2 && !isFirstPregame); //displays winscreen for first 3 seconds of new pregame
             if (pauseReason == 1 && pauseDuration >= 3f && dm.isDone)
-            {
+            { //checks if it is time to unpause
                 IsPaused = false;
-                pv.RPC("drawCardsAfterPause", RpcTarget.All);
+                pv.RPC("drawCardsAfterPause", RpcTarget.All); //draws cards from during pause
                 for (int i = 0; i < 12; i++)
                 {
                     if (tableCards[i].cardCurrent == "none")
-                    {
+                    { //makes sure each table card has a card
                         tableCards[i].drawCard();
                     }
                 }
@@ -108,7 +139,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
         } else
         {
             isFirstPauseFrame = true;
-            pauseReason = 0;
+            pauseReason = 0; //resets pause variables
             pauseDuration = 0f;
         }
         #endregion
@@ -162,6 +193,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
         IsPaused = false; //unpauses
         IsPregame = false;
         dm.drawStartingCards(); //draws nessecary cards
+        isFirstPregame = false;
     }
 
     public void Lose()
@@ -204,6 +236,9 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
             {
                 stream.SendNext(IsPaused); //sends game pause state to clients
                 stream.SendNext(IsPregame);
+                stream.SendNext(isFirstPregame);
+                stream.SendNext(pauseReason);
+                stream.SendNext(winner);
                 for (int i = 0; i < playerNumberList.Length; i++)
                 {
                     stream.SendNext(playerNumberList[i]);
@@ -215,6 +250,9 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
             {
                 IsPaused = (bool)stream.ReceiveNext(); //recieves game pause state
                 IsPregame = (bool)stream.ReceiveNext();
+                isFirstPregame = (bool)stream.ReceiveNext();
+                pauseReason = (int)stream.ReceiveNext();
+                winner = (string)stream.ReceiveNext();
                 playerNumberList = new int[25];
                 for (int i = 0; i < playerNumberList.Length; i++)
                 {

@@ -48,7 +48,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 200}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 77
+  controlID: 17
 --- !u!114 &3
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -94,8 +94,8 @@ MonoBehaviour:
     y: 0
     width: 230.66667
     height: 372.66666
-  m_MinSize: {x: 200, y: 200}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 201, y: 221}
+  m_MaxSize: {x: 4001, y: 4021}
   m_ActualView: {fileID: 16}
   m_Panes:
   - {fileID: 16}
@@ -223,7 +223,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 78
+  controlID: 26
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -248,7 +248,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 79
+  controlID: 64
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -382,21 +382,21 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scripts
+    - Assets/Scripts/Game
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Scripts
+  - Assets/Scripts/Game
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\pengu\OneDrive\Desktop\Coding\Projects\Hammer\Hammer
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 79}
-    m_SelectedIDs: 28640000
-    m_LastClickedID: 25640
+    m_SelectedIDs: 26640000
+    m_LastClickedID: 25638
     m_ExpandedIDs: 00000000206400002264000024640000266400002864000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -450,8 +450,8 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: 
-    m_LastClickedInstanceID: 0
+    m_SelectedInstanceIDs: 54170000
+    m_LastClickedInstanceID: 5972
     m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: c6230000a0620000d4620000a2620000b86300001a630000cc6300000863000070630000
     m_RenameOverlay:
@@ -553,9 +553,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: eaf2ffff
-      m_LastClickedID: -3350
-      m_ExpandedIDs: 18f3ffff90f4ffffc6f4ffff34f7ffff68f7ffff76f7ffff84f7ffff
+      m_SelectedIDs: 
+      m_LastClickedID: 0
+      m_ExpandedIDs: 1ebbffff54bbffff4abdffff72bdffff80bdffff8ebdffff30c5ffff66c5ffff58c7ffff7cc7ffff86c7ffff90c7ffff8ecdffff0ecfffff44cfffffd8d1ffff0cd2ffff16d2ffff20d2ffff48d7ffffd2dcffff0ae2ffff52e2ffff34edffff02f3ffff30f8ffff24fbffff28fbffff7e8300007096000016970000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -826,9 +826,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 721.70776, y: 674.18896, z: -3.9266787}
+    m_Target: {x: 1012.3255, y: 435.1555, z: -7.9336414}
     speed: 2
-    m_Value: {x: 721.70776, y: 674.18896, z: -3.9266787}
+    m_Value: {x: 1012.3255, y: 435.1555, z: -7.9336414}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -879,9 +879,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 480.87314
+    m_Target: 881.5702
     speed: 2
-    m_Value: 480.87314
+    m_Value: 881.5702
   m_Ortho:
     m_Target: 1
     speed: 2

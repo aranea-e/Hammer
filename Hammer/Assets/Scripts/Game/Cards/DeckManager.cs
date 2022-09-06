@@ -72,6 +72,8 @@ public class DeckManager : MonoBehaviourPunCallbacks, IPunObservable
 
     public void drawStartingCards()
     {
+        ResetDeck();
+        Shuffle();
         drawTable();
         pv.RPC("drawStartingHandCards", RpcTarget.All);
     }
@@ -133,11 +135,11 @@ public class DeckManager : MonoBehaviourPunCallbacks, IPunObservable
     [ContextMenu("request cards from hands")]
     public void requestCardsFromHands()
     {
-        isDone = false;
+        isDone = false; //resets relevant variables
         haveReturned = new bool[Game.playerStatusList.Length];
         cardsFromHands.Clear();
         for (int i = 0; i < Game.playerStatusList.Length; i++)
-        {
+        { //calls RPC from all UMs of active players
             if (Game.playerStatusList[i] == 1)
             {
                 pv.RPC("returnCardsFromHand", RpcTarget.All, i);
@@ -150,7 +152,7 @@ public class DeckManager : MonoBehaviourPunCallbacks, IPunObservable
 
     [PunRPC]
     public void returnCardsFromHand(int Number)
-    {
+    { //returns cards if player is active
         if (!Game.isUserNewJoin && Game.selfPlayerNumber == Number)
         {
             pv.RPC("recieveCardsFromHand", RpcTarget.All, Number, hm.cards);
@@ -163,20 +165,20 @@ public class DeckManager : MonoBehaviourPunCallbacks, IPunObservable
         if (pv.IsMine)
         {
             for (int i = 0; i < Cards.Length; i++)
-            {
+            { //adds cards to list
                 cardsFromHands.Add(Cards[i]);
             }
-            haveReturned[Number] = true;
+            haveReturned[Number] = true; //confirms UM returned cards
             bool allHaveReturned = true;
             for (int i = 0; i < haveReturned.Length; i++)
-            {
+            { //checks if all UMs returned cards
                 if (!haveReturned[i])
                 {
                     allHaveReturned = false;
                 }
             }
             if (allHaveReturned)
-            {
+            { //if all UMs returned cards, refills deck
                 refillDeckWithoutDuplicates();
             }
         }
@@ -185,7 +187,7 @@ public class DeckManager : MonoBehaviourPunCallbacks, IPunObservable
     public void refillDeckWithoutDuplicates()
     {
         for (int i = 0; i < 1; i++)
-        {
+        { //adds cards from each table card
             for (int j = 0; j < cardObjects[i].cardStack.Length; j++)
             {
                 cardsFromHands.Add(cardObjects[i].cardStack[j]);
@@ -195,18 +197,18 @@ public class DeckManager : MonoBehaviourPunCallbacks, IPunObservable
                 cardsFromHands.Add(cardObjects[i].cardStack[j]);
             }
         }
-        ResetDeck();
+        ResetDeck(); //resets deck
         for (int i = 0; i < cardsFromHands.Count; i++)
         {
             for (int j = 0; j < deck.Length; j++)
             {
                 if (deck[j] == cardsFromHands[i])
-                {
+                { //removes cards found in list
                     deck[j] = "none";
                 }
             }
         }
-        Shuffle();
+        Shuffle(); //shuffles, updates sprite, and tells GM that function is complete
         updateDeckSprite();
         isDone = true;
     }

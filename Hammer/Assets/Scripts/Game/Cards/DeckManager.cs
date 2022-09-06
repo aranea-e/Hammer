@@ -13,6 +13,7 @@ public class DeckManager : MonoBehaviourPunCallbacks, IPunObservable
     private string temp;
     public List<string> cardsFromHands;
     public bool[] haveReturned;
+    public bool isDone;
     #endregion
 
     #region references
@@ -124,6 +125,7 @@ public class DeckManager : MonoBehaviourPunCallbacks, IPunObservable
         if (countDeck() == 0)
         {
             Game.IsPaused = true; //pauses if deck runs out of cards
+            Game.pauseReason = 1;
         }
         return temp;
     }
@@ -131,6 +133,7 @@ public class DeckManager : MonoBehaviourPunCallbacks, IPunObservable
     [ContextMenu("request cards from hands")]
     public void requestCardsFromHands()
     {
+        isDone = false;
         haveReturned = new bool[Game.playerStatusList.Length];
         cardsFromHands.Clear();
         for (int i = 0; i < Game.playerStatusList.Length; i++)
@@ -205,6 +208,7 @@ public class DeckManager : MonoBehaviourPunCallbacks, IPunObservable
         }
         Shuffle();
         updateDeckSprite();
+        isDone = true;
     }
 
     #endregion

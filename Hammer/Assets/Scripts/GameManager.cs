@@ -11,6 +11,10 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     public bool isUserNewJoin;
     public int[] playerStatusList;
 
+    public int pauseReason;
+    public bool isFirstPauseFrame;
+    public float pauseDuration;
+
     public Photon.Realtime.Player[] playerList;
     public int[] playerNumberList;
     public int selfPlayerNumber;
@@ -39,6 +43,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
         if (IsPregame)
         { //pauses and constantly updates player list during pregame
             IsPaused = true;
+            pauseReason = 2;
             UpdatePlayerList();
         }
         #endregion
@@ -76,6 +81,27 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
                     playerStatusList[UM.playerNumber] = 2;
                 }
             }
+        }
+        #endregion
+        #region pause
+        if (IsPaused)
+        {
+            pauseDuration += Time.deltaTime;
+            if (isFirstPauseFrame && pauseReason == 1)
+            {
+                dm.requestCardsFromHands();
+                pv.RPC("checkCards", RpcTarget.All);
+            }
+            if (pauseReason == 1 && pauseDuration >= 3f && dm.isDone)
+            {
+                IsPaused = false;
+            }
+            isFirstPauseFrame = false;
+        } else
+        {
+            isFirstPauseFrame = true;
+            pauseReason = 0;
+            pauseDuration = 0f;
         }
         #endregion
     }   
@@ -128,6 +154,28 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
         IsPaused = false; //unpauses
         IsPregame = false;
         dm.drawStartingCards(); //draws nessecary cards
+    }
+
+    public void Lose()
+    {
+        UserManager[] UMS = Object.FindObjectsOfType<UserManager>();
+        foreach (UserManager UM in UMS)
+        {
+            if (UM.playerNumber == selfPlayerNumber)
+            {
+                UM.IsPlaying = false;
+            }
+        }
+        isUserPlaying = false;
+    }
+
+    [PunRPC]
+    public void checkCards()
+    {
+        if (hm.countHand() > 14)
+        {
+            Lose();
+        }
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)

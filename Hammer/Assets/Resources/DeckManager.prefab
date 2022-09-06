@@ -159,6 +159,7 @@ MonoBehaviour:
   cards: 0
   cardsFromHands: []
   haveReturned: 
+  isDone: 0
   cardObjects:
   - {fileID: 0}
   - {fileID: 0}

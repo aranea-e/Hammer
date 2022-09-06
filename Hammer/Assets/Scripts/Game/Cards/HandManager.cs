@@ -178,6 +178,9 @@ public class HandManager : MonoBehaviour
         { //if space is available in hand
             um = Object.FindObjectOfType<UserManager>();
             dmPV.RPC("requestDrawCard", RpcTarget.All, Game.selfPlayerNumber); //requests a card from the DM to add to hand
+        } else
+        {
+            Game.Lose();
         }
     }
 
@@ -185,13 +188,17 @@ public class HandManager : MonoBehaviour
     { //adds Card to first available spot in hand
         bool cont = false;
         for (int i = 0; i < 21 && !cont; i++)
+        {
+            if (cards[i] == "none")
             {
-                if (cards[i] == "none")
-                {
-                    cards[i] = Card;
-                    cont = true;
-                }
+                cards[i] = Card;
+                cont = true;
             }
+        }
+        if (cont == false)
+        {
+            Game.Lose();
+        }
     }
 
     public int countHand()

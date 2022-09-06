@@ -67,6 +67,21 @@ public class DeckManager : MonoBehaviourPunCallbacks, IPunObservable
 
     #region draw card
 
+    public void drawStartingCards()
+    {
+        drawTable();
+        pv.RPC("drawStartingHandCards", RpcTarget.All);
+    }
+
+    [PunRPC]
+    public void drawStartingHandCards()
+    {
+        for (int i = 0; i < 7; i++)
+        {
+            hm.drawCard();
+        }
+    }
+
     [PunRPC]
     public void returnDrawnCard(int PlayerNumber, string Card)
     { //returns card from requestDrawCard to player who requested card

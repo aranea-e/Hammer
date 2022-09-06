@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     void Update()
     {
         if (IsPregame)
-        {
+        { //pauses and constantly updates player list during pregame
             IsPaused = true;
             UpdatePlayerList();
         }
@@ -39,16 +39,16 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
             if (UM.playerNumber == selfPlayerNumber)
             {
                 if (IsPregame)
-                {
+                { //sets all users to playing during pregame
                     UM.IsPlaying = true;
                     isUserPlaying = true;
                 } else
-                {
+                { //sets isUserPlaying to IsPlaying of own usermanager
                     isUserPlaying = UM.IsPlaying;
                 }
             }
             if (IsPregame)
-            {
+            { //turns newJoin to false during pregame
                 UM.newJoin = false;
             }
         }
@@ -91,9 +91,17 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
         UserManager[] UMS = new UserManager[25];
         UMS = Object.FindObjectsOfType<UserManager>();
         foreach (UserManager UM in UMS)
-        {
+        { //updates userManagers
             UM.updateUser();
         }
+    }
+
+    public void startGame()
+    { //starts a new round
+        UpdatePlayerList(); //updates player list
+        IsPaused = false; //unpauses
+        IsPregame = false;
+        dm.drawStartingCards(); //draws nessecary cards
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)

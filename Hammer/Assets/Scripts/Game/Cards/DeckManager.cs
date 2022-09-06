@@ -11,6 +11,8 @@ public class DeckManager : MonoBehaviourPunCallbacks, IPunObservable
     public string[] deckFull;
     public int cards;
     private string temp;
+    public List<string> cardsFromHands;
+    public bool[] haveReturned;
     #endregion
 
     #region references
@@ -124,6 +126,85 @@ public class DeckManager : MonoBehaviourPunCallbacks, IPunObservable
             Game.IsPaused = true; //pauses if deck runs out of cards
         }
         return temp;
+    }
+
+    [ContextMenu("request cards from hands")]
+    public void requestCardsFromHands()
+    {
+        haveReturned = new bool[Game.playerStatusList.Length];
+        cardsFromHands.Clear();
+        for (int i = 0; i < Game.playerStatusList.Length; i++)
+        {
+            if (Game.playerStatusList[i] == 1)
+            {
+                pv.RPC("returnCardsFromHand", RpcTarget.All, i);
+            } else
+            {
+                haveReturned[i] = true;
+            }
+        }
+    }
+
+    [PunRPC]
+    public void returnCardsFromHand(int Number)
+    {
+        if (!Game.isUserNewJoin && Game.selfPlayerNumber == Number)
+        {
+            pv.RPC("recieveCardsFromHand", RpcTarget.All, Number, hm.cards);
+        }
+    }
+
+    [PunRPC]
+    public void recieveCardsFromHand(int Number, string[] Cards)
+    {
+        if (pv.IsMine)
+        {
+            for (int i = 0; i < Cards.Length; i++)
+            {
+                cardsFromHands.Add(Cards[i]);
+            }
+            haveReturned[Number] = true;
+            bool allHaveReturned = true;
+            for (int i = 0; i < haveReturned.Length; i++)
+            {
+                if (!haveReturned[i])
+                {
+                    allHaveReturned = false;
+                }
+            }
+            if (allHaveReturned)
+            {
+                refillDeckWithoutDuplicates();
+            }
+        }
+    }
+
+    public void refillDeckWithoutDuplicates()
+    {
+        for (int i = 0; i < 1; i++)
+        {
+            for (int j = 0; j < cardObjects[i].cardStack.Length; j++)
+            {
+                cardsFromHands.Add(cardObjects[i].cardStack[j]);
+            }
+            for (int j = 0; j < cardObjects[i].hammerCards.Count; j++)
+            {
+                cardsFromHands.Add(cardObjects[i].cardStack[j]);
+            }
+        }
+        ResetDeck();
+        for (int i = 0; i < cardsFromHands.Count; i++)
+        {
+            for (int j = 0; j < deck.Length; j++)
+            {
+                if (deck[j] == cardsFromHands[i])
+                {
+                    deck[j] = "none";
+                }
+            }
+        }
+        Shuffle();
+        updateDeckSprite();
     }
 
     #endregion

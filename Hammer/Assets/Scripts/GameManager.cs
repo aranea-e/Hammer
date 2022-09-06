@@ -8,6 +8,8 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     public bool IsPaused;
     public bool isUserPlaying;
     public bool IsPregame;
+    public bool isUserNewJoin;
+    public int[] playerStatusList;
 
     public Photon.Realtime.Player[] playerList;
     public int[] playerNumberList;
@@ -22,17 +24,25 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
 
     void Awake()
     {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            IsPaused = true;
+            IsPregame = true;
+        }
         spawner.SpawnStart();
         UpdatePlayerList();
     }
 
     void Update()
     {
+        #region pregame update
         if (IsPregame)
         { //pauses and constantly updates player list during pregame
             IsPaused = true;
             UpdatePlayerList();
         }
+        #endregion
+        #region isplaying update
         UserManager[] UMS = Object.FindObjectsOfType<UserManager>();
         foreach (UserManager UM in UMS)
         {
@@ -42,16 +52,32 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
                 { //sets all users to playing during pregame
                     UM.IsPlaying = true;
                     isUserPlaying = true;
+                    UM.newJoin = false;
+                    isUserNewJoin = false;
                 } else
                 { //sets isUserPlaying to IsPlaying of own usermanager
                     isUserPlaying = UM.IsPlaying;
+                    isUserNewJoin = UM.newJoin;
                 }
             }
-            if (IsPregame)
-            { //turns newJoin to false during pregame
-                UM.newJoin = false;
+        }
+        #endregion
+        #region player status
+        playerStatusList = new int[PhotonNetwork.PlayerList.Length];
+        foreach (UserManager UM in UMS)
+        {
+            if (!UM.newJoin)
+            {
+                if (UM.IsPlaying)
+                {
+                    playerStatusList[UM.playerNumber] = 1;
+                } else
+                {
+                    playerStatusList[UM.playerNumber] = 2;
+                }
             }
         }
+        #endregion
     }   
 
     [ContextMenu("Update Player List")]

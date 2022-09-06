@@ -157,6 +157,8 @@ MonoBehaviour:
   - J1
   - J2
   cards: 0
+  cardsFromHands: []
+  haveReturned: 
   cardObjects:
   - {fileID: 0}
   - {fileID: 0}

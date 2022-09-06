@@ -1210,9 +1210,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b85937f78c899c4993d7acc08b6d73f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsPaused: 1
+  IsPaused: 0
   isUserPlaying: 0
-  IsPregame: 1
+  IsPregame: 0
+  isUserNewJoin: 0
   playerNumberList: 
   selfPlayerNumber: 0
   spawner: {fileID: 392414618}

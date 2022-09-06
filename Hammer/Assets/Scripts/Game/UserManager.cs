@@ -57,6 +57,7 @@ public class UserManager : MonoBehaviourPunCallbacks, IPunObservable
             canvas.enabled = false;
         } else
         { //displays player info
+            symbolNumber = playerNumber;
             canvas.enabled = true;
             usernameUI.text = username; //displays username
             usernameUI.enabled = true;
@@ -89,7 +90,7 @@ public class UserManager : MonoBehaviourPunCallbacks, IPunObservable
                 usernameUI.enabled = false;
             } else
             {
-                if (playerNumber > Game.selfPlayerNumber)
+                if (playerNumber > Game.selfPlayerNumber && !Game.isUserNewJoin)
                 { //moves to appropriate location
                     pos = posList[playerNumber - 1];
                 } else

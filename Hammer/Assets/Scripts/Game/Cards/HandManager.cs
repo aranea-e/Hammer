@@ -14,6 +14,7 @@ public class HandManager : MonoBehaviour
     public int jCard;
     public int cardCount;
     public int cardsToDiscard;
+    public int cardsToDraw;
 
     public HandCard[] cardObjects;
     public string[] cards;
@@ -198,6 +199,10 @@ public class HandManager : MonoBehaviour
         if (cont == false)
         {
             Game.Lose();
+        }
+        if (Card == "none")
+        {
+            cardsToDraw++;
         }
     }
 

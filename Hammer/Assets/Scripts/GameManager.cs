@@ -95,6 +95,14 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
             if (pauseReason == 1 && pauseDuration >= 3f && dm.isDone)
             {
                 IsPaused = false;
+                pv.RPC("drawCardsAfterPause", RpcTarget.All);
+                for (int i = 0; i < 12; i++)
+                {
+                    if (tableCards[i].cardCurrent == "none")
+                    {
+                        tableCards[i].drawCard();
+                    }
+                }
             }
             isFirstPauseFrame = false;
         } else
@@ -176,6 +184,16 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
         {
             Lose();
         }
+    }
+
+    [PunRPC]
+    public void drawCardsAfterPause()
+    {
+        for (int i = 0; i < hm.cardsToDraw; i++)
+        {
+            hm.drawCard();
+        }
+        hm.cardsToDraw = 0;
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)

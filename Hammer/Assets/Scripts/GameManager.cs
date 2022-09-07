@@ -50,6 +50,20 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
             IsPaused = true;
             pauseReason = 2;
             UpdatePlayerList();
+            
+            for (int i = 0; i < hm.cards.Length; i++)
+            {
+                hm.cards[i] = "none";
+            }
+            hm.cardSelected = false;
+            hm.jSelected = false;
+            hm.cardsToDiscard = 0;
+            hm.cardsToDraw = 0;
+            for (int i = 0; i < tableCards.Length; i++)
+            {
+                tableCards[i].resetCard();
+            }
+            dm.discardCard("none");
         }
         #endregion
         #region isplaying update

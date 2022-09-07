@@ -469,6 +469,18 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
         timerActive = false;
     }
 
+    public void resetCard() //resets relevant variables but does not draw 1
+    {
+        for (int i = 0; i < 8; i++)
+        {
+            cardStack[i] = "none";
+            cardPlayers[i] = -1;
+        }
+        jTarget = -1;
+        hammerCards.Clear();
+        timerActive = false;
+    }
+
     public bool isMouseOnCard()
     {
         return (Camera.main.ScreenToWorldPoint(Input.mousePosition).x >= trans.position.x - .5 && Camera.main.ScreenToWorldPoint(Input.mousePosition).x <= trans.position.x + .5 && Camera.main.ScreenToWorldPoint(Input.mousePosition).y >= trans.position.y - .75 && Camera.main.ScreenToWorldPoint(Input.mousePosition).y <= trans.position.y + .75);

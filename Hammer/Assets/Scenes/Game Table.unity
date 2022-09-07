@@ -154,7 +154,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timerTime: 0
-  timeToDraw: 10
+  timeToDraw: 5
   sr: {fileID: 41810906}
   cardSR: {fileID: 509057301}
   sprites:
@@ -1215,6 +1215,8 @@ MonoBehaviour:
   IsPregame: 0
   isUserNewJoin: 0
   playerStatusList: 
+  remainingPlayers: 0
+  lastPlayer: 0
   pauseReason: 0
   isFirstPauseFrame: 0
   pauseDuration: 0

@@ -15,6 +15,7 @@ public class HandManager : MonoBehaviour
     public int cardCount;
     public int cardsToDiscard;
     public int cardsToDraw;
+    public int quakesInGame;
 
     public HandCard[] cardObjects;
     public string[] cards;
@@ -227,7 +228,8 @@ public class HandManager : MonoBehaviour
         }
         if (countHand() == 1)
         {
-            cards[0] = "none"; //if only one card is in hand, sets it to none
+            cards[0] = "none"; //if only one card is in hand, sets it to none and triggers Quake
+            Game.pv.RPC("quake", RpcTarget.All, Game.selfPlayerNumber);
 
         } else if (countHand() == 2)
         {

@@ -1223,6 +1223,7 @@ MonoBehaviour:
   isFirstPregame: 1
   isWinscreen: 0
   winner: 
+  quakeTrigger: 0
   playerNumberList: 
   selfPlayerNumber: 0
   spawner: {fileID: 392414618}
@@ -2398,6 +2399,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Game: {fileID: 392414620}
   sr: {fileID: 690988606}
+  quake: {fileID: -590437078, guid: 54ed53a3d73c54c49abeccae0023d55d, type: 3}
+  pause: {fileID: 1942150363, guid: 9c6665871e4e6ad4a9cbeac74c35492d, type: 3}
 --- !u!1 &753433731
 GameObject:
   m_ObjectHideFlags: 0
@@ -5042,6 +5045,7 @@ MonoBehaviour:
   cardCount: 0
   cardsToDiscard: 0
   cardsToDraw: 0
+  quakesInGame: 0
   cardObjects:
   - {fileID: 753433733}
   - {fileID: 172707452}

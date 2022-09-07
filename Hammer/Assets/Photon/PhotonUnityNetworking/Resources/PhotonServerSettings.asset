@@ -58,6 +58,8 @@ MonoBehaviour:
   - returnCardsFromHand
   - checkCards
   - drawCardsAfterPause
+  - quake
+  - drawCardsFromQuake
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

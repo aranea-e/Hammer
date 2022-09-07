@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     public bool isFirstPregame;
     public bool isWinscreen;
     public string winner;
+    public int quakeTrigger;
 
     public Photon.Realtime.Player[] playerList;
     public int[] playerNumberList;
@@ -55,15 +56,16 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
             {
                 hm.cards[i] = "none";
             }
-            hm.cardSelected = false;
+            hm.cardSelected = false; //resents HandManager variables
             hm.jSelected = false;
             hm.cardsToDiscard = 0;
             hm.cardsToDraw = 0;
+            hm.quakesInGame = 0;
             for (int i = 0; i < tableCards.Length; i++)
             {
-                tableCards[i].resetCard();
+                tableCards[i].resetCard(); //resets all table cards
             }
-            dm.discardCard("none");
+            dm.discardCard("none"); //resets discards
         }
         #endregion
         #region isplaying update
@@ -140,13 +142,24 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
             if (pauseReason == 1 && pauseDuration >= 3f && dm.isDone)
             { //checks if it is time to unpause
                 IsPaused = false;
-                pv.RPC("drawCardsAfterPause", RpcTarget.All); //draws cards from during pause
-                for (int i = 0; i < 12; i++)
+                if (pv.IsMine)
                 {
-                    if (tableCards[i].cardCurrent == "none")
-                    { //makes sure each table card has a card
-                        tableCards[i].drawCard();
+                    pv.RPC("drawCardsAfterPause", RpcTarget.All); //draws cards from during pause
+                    for (int i = 0; i < 12; i++)
+                    {
+                        if (tableCards[i].cardCurrent == "none")
+                        { //makes sure each table card has a card
+                            tableCards[i].drawCard();
+                        }
                     }
+                }
+            }
+            if (pauseReason == 3 && pauseDuration >= 3f)
+            { //if 3 seconds have passed from a quake
+                IsPaused = false;
+                if (pv.IsMine)
+                {
+                    pv.RPC("drawCardsFromQuake", RpcTarget.All, quakeTrigger); //forces all to draw cards
                 }
             }
             isFirstPauseFrame = false;
@@ -216,7 +229,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
         foreach (UserManager UM in UMS)
         {
             if (UM.playerNumber == selfPlayerNumber)
-            {
+            { //finds user's UserManager and removes them from play
                 UM.IsPlaying = false;
             }
         }
@@ -227,7 +240,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     public void checkCards()
     {
         if (hm.countHand() > 14)
-        {
+        { //loses if user has more than 15 cards
             Lose();
         }
     }
@@ -236,10 +249,38 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     public void drawCardsAfterPause()
     {
         for (int i = 0; i < hm.cardsToDraw; i++)
-        {
+        { //forces users to draw cards unable to be drawn due to pause
             hm.drawCard();
         }
-        hm.cardsToDraw = 0;
+        hm.cardsToDraw = 0; //resets cardsToDraw
+    }
+
+    [PunRPC]
+    public void quake(int Number)
+    {
+        if (pv.IsMine)
+        { //pauses and tells the game it was a quake
+            IsPaused = true;
+            pauseReason = 3;
+            quakeTrigger = Number;
+        }
+    }
+
+    [PunRPC]
+    public void drawCardsFromQuake(int Number)
+    {
+        for (int i = 0; i < 3; i++)
+        { //draw 3
+            hm.drawCard();
+        }
+        if (selfPlayerNumber == Number)
+        {
+            for (int i = 0; i < hm.quakesInGame; i++)
+            { //draw 1 more for each time user has triggered quake
+                hm.drawCard();
+            }
+            hm.quakesInGame++; //increments counter for quakes
+        }
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)

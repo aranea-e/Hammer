@@ -19,6 +19,7 @@ public class UserManager : MonoBehaviourPunCallbacks, IPunObservable
     public int playerActorNumber;
     public int playerNumber;
     public bool newJoin;
+    public bool isHost;
     #endregion
 
     #region refs
@@ -40,8 +41,9 @@ public class UserManager : MonoBehaviourPunCallbacks, IPunObservable
     public void Start()
     {
         if (pv.IsMine)
-        { //loads username and own ActorNumber
+        { //loads username and determines if client is host
             username = PlayerPrefs.GetString("Username");
+            isHost = PhotonNetwork.IsMasterClient;
         }
         playerActorNumber = pv.OwnerActorNr;
         hm = Object.FindObjectOfType<HandManager>(); //sets references
@@ -124,6 +126,7 @@ public class UserManager : MonoBehaviourPunCallbacks, IPunObservable
             stream.SendNext(cards);
             stream.SendNext(IsPlaying);
             stream.SendNext(newJoin);
+            stream.SendNext(isHost);
         } else //if client is not owner of UserManager, recieves data
         {
             playerNumber = (int)stream.ReceiveNext();
@@ -131,6 +134,7 @@ public class UserManager : MonoBehaviourPunCallbacks, IPunObservable
             cards = (int)stream.ReceiveNext();
             IsPlaying = (bool)stream.ReceiveNext();
             newJoin = (bool)stream.ReceiveNext();
+            isHost = (bool)stream.ReceiveNext();
         }
     }
 }

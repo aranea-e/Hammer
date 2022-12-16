@@ -136,6 +136,17 @@ public class HandManager : MonoBehaviour
         ums = FindObjectsOfType<UserManager>();
         if (jSelected)
         {
+            tcs = FindObjectsOfType<TableCard>();
+            bool temp = false;
+            for (int i = 0; temp == false; i++)
+            { //finds selected card
+                temp = tcs[i].checkIfCorrectCard(jCard);
+                if (temp == true && tcs[i].lastPlayer != -1)
+                { //if another player played on the card, deselects card
+                    jSelected = false;
+                    cardSelected = false;
+                }
+            }
             foreach (UserManager UM in ums)
             { //goes through each Usermanager
                 if (!UM.pv.IsMine && UM.IsPlaying)

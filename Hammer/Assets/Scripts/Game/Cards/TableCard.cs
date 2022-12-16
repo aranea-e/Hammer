@@ -149,6 +149,11 @@ public class TableCard : MonoBehaviourPunCallbacks, IPunObservable
 
     #region functions
 
+    public bool checkIfCorrectCard(int CardNumber)
+    { //checks if this card is the card entered
+        return CardNumber == cardNumber;
+    }
+
     public void playJoker(int Player, int CardNumber)
     {
         if (CardNumber == cardNumber)

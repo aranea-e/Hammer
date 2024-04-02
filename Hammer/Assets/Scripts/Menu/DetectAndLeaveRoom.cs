@@ -6,6 +6,7 @@ using Photon.Pun;
 
 public class DetectAndLeaveRoom : MonoBehaviourPunCallbacks
 {
+    /*
     float buffer = 1.0f;
 
     public override void OnLeftRoom()
@@ -36,4 +37,5 @@ public class DetectAndLeaveRoom : MonoBehaviourPunCallbacks
             GameMenu.exit(1);
         }
     }
+    */
 }

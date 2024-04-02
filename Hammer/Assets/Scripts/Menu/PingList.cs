@@ -18,6 +18,7 @@ public class PingList : MonoBehaviourPunCallbacks
         }
         //prevents list from being destroyed, allowing ping data to be accessed at any time
         DontDestroyOnLoad(this.gameObject);
+        overrideRegion = null;
     }
 
     public void updateRegionHandler(RegionHandler regionHandler) {

@@ -48,7 +48,6 @@ public class RegionSelect : MonoBehaviourPunCallbacks {
             }
             PhotonNetwork.Disconnect(); //leaves current region
             pl.overrideRegion = regionName; //sets override region for load process
-            Debug.Log(pl.overrideRegion);
             SceneManager.LoadScene(1);
         }
     }

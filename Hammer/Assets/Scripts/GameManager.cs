@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-public class GameManager : MonoBehaviourPunCallbacks
-{
-    
+public class GameManager : MonoBehaviourPunCallbacks {
+    void Awake() {
+        Util.Start();
+    }
 }

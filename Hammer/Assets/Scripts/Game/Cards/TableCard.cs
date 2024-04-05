@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Card : MonoBehaviour {
+public class TableCard : MonoBehaviour {
     [SerializeField] private CardSO c;
 
     void Update() {
@@ -23,5 +23,10 @@ public class Card : MonoBehaviour {
 
     public CardSO getCard() {
         return c;
+    }
+
+    [ContextMenu("Reset Card")]
+    void setNull() {
+        setCard(null);
     }
 }

@@ -9,6 +9,7 @@ public class CardSO : ScriptableObject {
     public int value;
     public bool joker;
     public bool special;
+    public int suit;
 
     public string holder;
 }

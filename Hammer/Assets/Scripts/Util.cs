@@ -80,12 +80,40 @@ public static class Util {
     #endregion
 
     #region misc
+    public static CardSO randomCard() {
+        return deck[Random.Range(0, deck.Length)];
+    }
+
     /**
     *   Calculates modifier for y position of hand card based on the function
     *   f(t) = -cos(10πt)/2 + 0.5
     */
     public static float calculateMod(float t) {
         return (-Mathf.Cos(10 * Mathf.PI * t) / 2) + 0.5f;
+    }
+
+    /**
+    *   Takes two inputs
+    *   a is the card to be played
+    *   b is the stack on which it is intended to be played
+    *   b is assumed to have no null cards between non-null cards
+    *
+    *   If b is empty or a is null, returns false
+    *   If b is a single card and special, returns false
+    *   If a has the same value as the first card of b, returns true
+    *   If a is special and b only has one card, returns true
+    *   All other cases return false
+    */
+    public static bool canPlay(CardSO a, CardSO[] b) {
+        if (b[0] == null || a == null || (b[1] == null && a.special) ) {
+            return false;
+        }
+
+        if (a.value == b[0].value || (b[1] == null && a.special) ) {
+            return true;
+        }
+
+        return false;
     }
     #endregion
 

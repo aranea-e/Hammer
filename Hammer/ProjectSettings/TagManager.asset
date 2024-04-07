@@ -44,6 +44,6 @@ TagManager:
   - name: Card Glow
     uniqueID: 616857049
     locked: 0
-  - name: Hand
+  - name: Card
     uniqueID: 2605174529
     locked: 0

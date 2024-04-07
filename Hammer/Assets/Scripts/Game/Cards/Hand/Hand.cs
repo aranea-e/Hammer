@@ -38,6 +38,24 @@ public class Hand : MonoBehaviour {
         return hand[index];
     }
 
+    public int getSelected() {
+        return selected;
+    }
+
+    public CardSO getSelectedCardSO() {
+        if (selected == -1) {
+            return null;
+        }
+        return hand[selected];
+    }
+
+    public HandCard getSelectedObject() {
+        if (selected == -1) {
+            return null;
+        }
+        return cardObjects[selected];
+    }
+
     public bool getLock() {
         return selectLock;
     }
@@ -56,7 +74,7 @@ public class Hand : MonoBehaviour {
             if (Random.Range(0, 5) == 0) {
                 hand[i] = null;
             } else {
-                hand[i] = Util.deck[Random.Range(0, 54)];
+                hand[i] = Util.randomCard();
             }
         }
     }
@@ -64,7 +82,7 @@ public class Hand : MonoBehaviour {
     [ContextMenu("randomize full hand")]
     void randomizeFullHand() {
         for (int i = 0; i < hand.Length; i++) {
-            hand[i] = Util.deck[Random.Range(0, 54)];
+            hand[i] = Util.randomCard();
         }
     }
     #endregion

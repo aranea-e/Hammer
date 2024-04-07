@@ -200,7 +200,7 @@ public class Hand : MonoBehaviour {
     int cardOnCursor() {
         int output = -1;
         for (int i = 0; i < cardObjects.Length; i++) {
-            if (Util.mouseInBounds(cardObjects[i].getSR()) && hand[i] != null) {
+            if (Util.mouseInBoundsNoBottom(cardObjects[i].getSR()) && hand[i] != null) {
                 output = i;
             }
         }

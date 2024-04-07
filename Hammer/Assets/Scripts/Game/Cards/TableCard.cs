@@ -20,6 +20,7 @@ public class TableCard : MonoBehaviour {
 
     void Update() {
         updateSprite();
+        checkForPlayCard();
     }
 
 
@@ -76,5 +77,23 @@ public class TableCard : MonoBehaviour {
             }
         }
         return cards.Length - 1;
+    }
+
+    /**
+    *   If the mouse is clicked, the cursor is on the card, and the selected
+    *   card can be played on this card, calls playCard() with the selected 
+    *   card.
+    */
+    void checkForPlayCard() {
+        if (Input.GetMouseButtonDown(0) 
+            && (Util.mouseInBounds(s) || (Util.mouseInBounds(specialSR) && specialSR.enabled))
+            && Util.canPlay(FindObjectOfType<Hand>().getSelectedCardSO(), cards)) {
+            playCard(FindObjectOfType<Hand>().getSelectedCardSO());
+        }
+    }
+
+    void playCard(CardSO c) {
+        FindObjectOfType<Hand>().playCard(c);
+        cards[lastCard() + 1] = c;
     }
 }

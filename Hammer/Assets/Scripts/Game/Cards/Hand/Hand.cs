@@ -38,6 +38,19 @@ public class Hand : MonoBehaviour {
         return hand[index];
     }
 
+    public void playCard(CardSO c) {
+        for (int i = 0; i < hand.Length; i++) {
+            if (hand[i] == c) {
+                hand[i] = null;
+                if (i == selected) {
+                    selected = -1;
+                    selectLock = false;
+                }
+                return;
+            }
+        }
+    }
+
     public int getSelected() {
         return selected;
     }

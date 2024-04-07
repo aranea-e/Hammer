@@ -105,7 +105,7 @@ public static class Util {
     *   All other cases return false
     */
     public static bool canPlay(CardSO a, CardSO[] b) {
-        if (b[0] == null || a == null || (b[1] == null && a.special) ) {
+        if (b[0] == null || a == null || (b[1] == null && b[0].special) ) {
             return false;
         }
 

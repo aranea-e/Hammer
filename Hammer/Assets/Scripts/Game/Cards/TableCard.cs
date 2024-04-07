@@ -15,7 +15,7 @@ public class TableCard : MonoBehaviour {
     }
 
     void Start() {
-        cards[0] = Util.randomCard();
+        cards[0] = FindObjectOfType<Deck>().drawCard();
     }
 
     void Update() {

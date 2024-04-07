@@ -87,7 +87,7 @@ public class Hand : MonoBehaviour {
             if (Random.Range(0, 5) == 0) {
                 hand[i] = null;
             } else {
-                hand[i] = Util.randomCard();
+                hand[i] = FindObjectOfType<Deck>().drawCard();
             }
         }
     }
@@ -95,7 +95,7 @@ public class Hand : MonoBehaviour {
     [ContextMenu("randomize full hand")]
     void randomizeFullHand() {
         for (int i = 0; i < hand.Length; i++) {
-            hand[i] = Util.randomCard();
+            hand[i] = FindObjectOfType<Deck>().drawCard();
         }
     }
     #endregion

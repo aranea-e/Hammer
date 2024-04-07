@@ -6,5 +6,6 @@ using Photon.Pun;
 public class GameManager : MonoBehaviourPunCallbacks {
     void Awake() {
         Util.Start();
+        FindObjectOfType<Deck>().ManualStart();
     }
 }

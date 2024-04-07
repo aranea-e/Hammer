@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class TableCard : MonoBehaviour {
     [SerializeField] private CardSO c;
+    [SerializeField] private int id;
 
     void Update() {
         updateSprite();

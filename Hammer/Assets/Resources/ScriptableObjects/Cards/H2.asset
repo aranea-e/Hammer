@@ -17,4 +17,5 @@ MonoBehaviour:
   value: 2
   joker: 0
   special: 0
+  suit: 3
   holder: 
